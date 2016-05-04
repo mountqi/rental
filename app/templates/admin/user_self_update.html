@@ -1,0 +1,23 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<br/>
+<br/>
+
+<div class="row ">
+
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+</div> <!-- the row class div -->
+
+<br/>
+
+<a href="{{ url_for('admin.user_self_passwd') }}">
+    <button type="button" class="btn btn-primary">修改密码</button>
+</a>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <!-- 展示用户列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>账号</th>
+             <th>姓名</th>
+             <th>创建日</th>
+             <th>截止日</th>
+             <th>状态</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for user in sub_customers %}
+          <tr>
+             <td>{{user.login_name}}</td>
+             <td>{{check_empty(user.name)}}</td>
+             <td>{{user.create_time}}</td>
+             <td>{{user.expire_time}}</td>
+             <td>{{user.get_active_state_str()}}</td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+{% endblock %}

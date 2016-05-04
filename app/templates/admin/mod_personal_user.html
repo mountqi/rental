@@ -1,0 +1,29 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+</div> <!-- the row class div -->
+
+<br/>
+
+<a href="{{ url_for('admin.new_passwd',user_id=user_id) }}">
+<button type="button" class="btn btn-primary">修改密码</button>
+</a>
+
+<br/>
+<br/>
+
+<a href="{{ url_for('admin.charge_fee_tmp',customer_id=user_id) }}">
+<button type="button" class="btn btn-primary">缴费</button>
+</a>
+
+<br/>
+<br/>
+{% endblock %}

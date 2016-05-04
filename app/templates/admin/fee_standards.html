@@ -1,0 +1,51 @@
+{% extends "admin/admin_base.html" %}
+{% import "admin/_macro_page.html" as macro_page %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <a href="{{ url_for('admin.add_fee_standard') }}">
+    <button type="button" class="btn btn-primary">添加收费标准</button>
+    </a>
+    <br/>
+    <br/>
+
+    <!-- 展示用户列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>名称</th>
+             <th>时间长度</th>
+             <th>创建日</th>
+             <th>额度</th>
+             <th>折扣</th>
+             <th>执行次数</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for fee in fees %}
+          <tr>
+              <td>{{fee.fee_name}}</td>
+              <td>{{fee.time_length}}{{TimeLengthType.get_type_str(fee.time_length_type)}}</td>
+              <td>{{date_format(fee.create_time)}}</td>
+              <td>{{fee.amount}}</td>
+              <td>{{fee.discount}}</td>
+              <td>{{len(fee.fee_records.all())}}</td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.personal_customers', fragment='#comments') }}
+</div>
+{% endif %}
+
+{% endblock %}

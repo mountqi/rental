@@ -1,0 +1,50 @@
+{% extends "admin/admin_base.html" %}
+{% import "admin/_macro_page.html" as macro_page %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <a href="{{ url_for('admin.add_rolegroup') }}">
+    <button type="button" class="btn btn-primary">添加权限组</button>
+    </a>
+    <br/>
+    <br/>
+
+    <!-- 展示权限组列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>权限组名</th>
+             <th>组成员数</th>
+             <th>备注</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for role_group in role_groups %}
+          <tr>
+             <td>
+                 <a href="{{ url_for('admin.mod_rolegroup',role_id=role_group.role_id) }}">
+                 {{role_group.name}}
+                 </a>
+             </td>
+             <td>{{len(role_group.users.all())}}</td>
+             <td>{{check_empty(role_group.remark)}}</td>
+
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.rolegroups', fragment='#comments') }}
+</div>
+{% endif %}
+
+{% endblock %}

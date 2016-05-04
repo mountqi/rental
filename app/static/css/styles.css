@@ -1,0 +1,13 @@
+#nav_header {
+    background-color:rgb(68,84,106);
+    color:rgb(255,255,255);
+}
+
+#nav_header a {
+    color:rgb(255,255,255);
+}
+
+#backend-nav a {
+    color:rgb(0,0,0);
+}
+

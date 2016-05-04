@@ -1,0 +1,99 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+<!--{{ form.start_time.label }} {{ form.start_time() }}-->
+<!--{{ form.submit() }}-->
+{{ wtf.quick_form(form) }}
+
+
+<p>{{ moment().format('MMMM Do YYYY, h:mm:ss a') }}</p>
+<p>{{ moment().format('YYYY-MM-DD') }}</p>
+<p id="time1"></p>
+<p id="time2"></p>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{{ moment.lang("zh-cn") }}
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script src="{{ url_for('static', filename='js/datetime.1-1.js') }}"></script>
+
+  <script>
+  $(function() {
+
+    $.datepicker.regional["zh-CN"] = { closeText: "关闭", prevText: "&#x3c;上月", nextText: "下月&#x3e;", currentText: "今天",
+        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+        dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+        weekHeader: "周", dateFormat: "yy-mm-dd", firstDay: 1, isRTL: !1, showMonthAfterYear: !0, yearSuffix: "年" }
+
+    $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
+
+    $( "#datepicker" ).datepicker();
+    $( "#datepicker" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+
+    var d1 = new Date("1911-02-01")
+    var date = new DateTime(d1.getFullYear(),d1.getMonth()+1,d1.getDate()+1)
+
+    $("#time1").append(date.format("yyyy-MM-dd"))
+    date1 = date.addMonths(1)
+    $("#time2").append(date1.format("yyyy-MM-dd"))
+
+    $("#datepicker").change(function(){
+        var d1 = new Date(this.value)
+        var date = new DateTime(d1.getFullYear(),d1.getMonth()+1,d1.getDate())
+        $("#time1").text(date.format("yyyy-MM-dd"))
+        date1 = date.addMonths(1)
+        date1 = date1.addDays(-2)
+        $("#time2").text(date1.format("yyyy-MM-dd"))
+    });
+
+    // 日期正则表达式
+    var DATE_FORMAT = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/;
+    if(DATE_FORMAT.test("1922-03-04")){
+        $("#time2").text("格式正确")
+     }
+
+
+  });
+
+/*
+1. 服务器端设置start_date，根据缴费记录
+2. 网页端检查start_date，如果没有或者不合法，则设定今天为start_date；如果合法，则根据所选定的收费类型
+产生新的expire_date
+
+a. 服务器端检查收费历史，如果没有，则设定今天为start_date
+b. 如果有，则检查最后一次的end_date，设定第二天为start_date
+c. 另外收费网页上应该显示最后最后一个有效日期
+d. 网页上还根据日期倒序显示收费历史记录
+
+
+*/
+
+  </script>
+
+{% endblock %}

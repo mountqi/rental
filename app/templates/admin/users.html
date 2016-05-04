@@ -1,0 +1,58 @@
+{% extends "admin/admin_base.html" %}
+{% import "admin/_macro_page.html" as macro_page %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+    <a href="{{ url_for('admin.add_user') }}">
+    <button type="button" class="btn btn-primary">添加管理员</button>
+    </a>
+    <br/>
+    <br/>
+
+    <!-- 展示用户列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>账号</th>
+             <th>姓名</th>
+             <th>电话</th>
+             <th>权限组</th>
+             <th>状态</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for user in users %}
+          <tr>
+             <td>
+                 <a href="{{ url_for('admin.mod_user',user_id=user.user_id) }}">
+                 {{user.login_name}}
+                 </a>
+             </td>
+             <td>{{check_empty(user.name)}}</td>
+             <td>{{check_empty(user.phone_no)}}</td>
+             <td>{{user.role.name}}</td>
+             <td>
+                 {% if user.is_active %}
+                     有效
+                 {% else %}
+                     停用
+                 {% endif %}
+             </td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.users', fragment='#comments') }}
+</div>
+{% endif %}
+
+{% endblock %}

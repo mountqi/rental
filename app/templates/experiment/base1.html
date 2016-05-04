@@ -1,0 +1,62 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+
+
+
+<br/>
+{% import "_macro_nav_menu.html" as macro_nav_menu %}
+{{ macro_nav_menu.render_nav_menu(nav_menu) }}
+
+<br/>
+
+{% import "_macro_tab_menu.html" as macro_tab_menu %}
+{{ macro_tab_menu.render_tab_menu(tab_menu,id="mytab2") }}
+<br/>
+<br/>
+
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}
+    {{nav.top.render()}}
+
+<p id="h01"></p>
+
+
+
+    {% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+
+<script>
+
+function myFunction()
+{
+$("#h01").html("Hello jQuery")
+}
+$(document).ready(myFunction);
+
+</script>
+
+{% endblock %}
+

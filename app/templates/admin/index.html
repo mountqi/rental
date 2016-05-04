@@ -1,0 +1,59 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    {% if Permission.is_admin_backend_management(current_user.role.permissions) %}
+    <a href="{{ url_for('admin.users') }}">
+    <div class="col-md-3">
+        <h1>后台管理</h1>
+        <br/>
+        <p>添加和修改权限组<br/><br/>
+           添加和修改管理员
+        </p>
+    </div>
+    </a>
+    {% endif %}
+
+    {% if Permission.is_admin_IT(current_user.role.permissions) %}
+    <a href="{{ url_for('admin.undone') }}">
+    <div class="col-md-3">
+        <h1>系统维护</h1>
+        <br/>
+        <p>备份数据<br/><br/>
+           生成系统使用的各种报表
+        </p>
+    </div>
+    </a>
+    {% endif %}
+
+    {% if Permission.is_admin_house_management(current_user.role.permissions) %}
+    <a href="{{ url_for('admin.undone') }}">
+    <div class="col-md-3">
+        <h1>房源维护</h1>
+        <br/>
+        <p>添加房源相关的各种信息<br/><br/>
+           更新房源出租状态
+        </p>
+    </div>
+    </a>
+    {% endif %}
+
+    {% if Permission.is_admin_customer_management(current_user.role.permissions) %}
+    <a href="{{ url_for('admin.personal_customers') }}">
+    <div class="col-md-3">
+        <h1>用户管理</h1>
+        <br/>
+        <p>添加和修改个人用户、公司用户<br/><br/>
+           记录用户缴费
+        </p>
+    </div>
+    </a>
+    {% endif %}
+
+</div> <!-- the row class div -->
+
+{% endblock %}
+

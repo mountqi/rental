@@ -1,0 +1,65 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    <div class="col-md-4">
+
+        <!-- 展示用户缴费记录 users-->
+        <table class="table table-condensed">
+           <thead>
+              <tr>
+                 <th>日期</th>
+                 <th>金额</th>
+                 <th>收费标准</th>
+              </tr>
+           </thead>
+           <tbody>
+
+            {% for fee_record in fee_records %}
+              <tr>
+                  <td>{{date_format(fee_record.charge_time)}}</td>
+                  <td>{{fee_record.fee.amount}}</td>
+                  <td>{{fee_record.fee.fee_name}}</td>
+              </tr>
+            {% endfor %}
+
+           </tbody>
+        </table>
+
+    </div>
+
+    </div> <!-- the row class div -->
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script>
+  $(function() {
+
+    $.datepicker.regional["zh-CN"] = { closeText: "关闭", prevText: "&#x3c;上月", nextText: "下月&#x3e;", currentText: "今天",
+        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+        dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+        weekHeader: "周", dateFormat: "yy-mm-dd", firstDay: 1, isRTL: !1, showMonthAfterYear: !0, yearSuffix: "年" }
+
+    $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
+
+    $( "#start-date" ).datepicker();
+    $( "#start-date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+
+  });
+</script>
+
+{% endblock %}

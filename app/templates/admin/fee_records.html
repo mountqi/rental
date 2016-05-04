@@ -1,0 +1,43 @@
+{% extends "admin/admin_base.html" %}
+{% import "admin/_macro_page.html" as macro_page %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+
+    <!-- 展示收费记录-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>日期</th>
+             <th>用户</th>
+             <th>金额</th>
+             <th>收费标准</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for fee_record in fee_records %}
+          <tr>
+              <td>{{date_format(fee_record.charge_time)}}</td>
+              <td>{{fee_record.customer.login_name}}</td>
+              <td>{{fee_record.fee.amount}}</td>
+              <td>{{fee_record.fee.fee_name}}</td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.fee_records', fragment='#comments') }}
+</div>
+{% endif %}
+
+
+{% endblock %}

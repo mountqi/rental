@@ -1,0 +1,57 @@
+{% extends "admin/admin_base.html" %}
+{% import "admin/_macro_page.html" as macro_page %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+
+    <a href="{{ url_for('admin.add_corp_customer') }}">
+    <button type="button" class="btn btn-primary">添加公司用户</button>
+    </a>
+    <br/>
+    <br/>
+
+    <!-- 展示用户列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>账号</th>
+             <th>公司名称</th>
+             <th>子账号数</th>
+             <th>状态</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for user in customers %}
+          <tr>
+             <td>
+                 <a href="{{ url_for('admin.mod_corp_customer',user_id=user.user_id) }}">
+                 {{user.login_name}}
+                 </a>
+             </td>
+             <td>{{user.agency.corp_name}}</td>
+             <td>
+                 <a href="{{ url_for('admin.sub_corp_customers',agency_id=user.agency_id) }}">
+                 {{user.agency.sub_account_no}}
+                 </a>
+             </td>
+             <td>{{user.get_active_state_str()}}</td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.corp_customers', fragment='#comments') }}
+</div>
+{% endif %}
+
+
+{% endblock %}
