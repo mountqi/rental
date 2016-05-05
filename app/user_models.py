@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -187,7 +187,9 @@ class FeeRecord(db.Model):
     collector_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     fee_id = db.Column(db.Integer, db.ForeignKey('fees.fee_id'))
     start_time = db.Column(db.DateTime(), default=datetime.now)
+    expire_time = db.Column(db.DateTime(), default=datetime.now)
     charge_time = db.Column(db.DateTime(), default=datetime.now)
+    is_valid = db.Column(db.Boolean, default=True) # 缴费是否被撤销了
 
 
 class UserType:
@@ -210,7 +212,7 @@ class User(UserMixin, db.Model):
     create_time = db.Column(db.DateTime(), default=datetime.now)
     expire_time = db.Column(db.DateTime(), default=datetime.now)
     user_type = db.Column(db.Integer)
-    is_active = db.Column(db.Boolean,default=True)
+    is_active = db.Column(db.Boolean,default=False)
     agency_id = db.Column(db.Integer, db.ForeignKey('agencies.agency_id'))
     remark = db.Column(db.String(256))
 

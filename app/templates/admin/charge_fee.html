@@ -42,7 +42,7 @@
 {% block scripts %}
 {{ super() }}
 <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-
+<script src="{{ url_for('static', filename='js/datetime.1-1.js') }}"></script>
 <script>
   $(function() {
 
@@ -59,7 +59,43 @@
     $( "#start-date" ).datepicker();
     $( "#start-date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 
+    //update_expire_date()
+    $("#start-date").change(ajax_exe)
+
   });
+
+
+  function update_expire_date() {
+    console.log($("#start-date").val())
+    // 根据start_date设定expire_date
+    var DATE_FORMAT = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/;
+    if(DATE_FORMAT.test( $("#start-date").val() )){
+        var start_date = new Date($("#start-date").val());
+        console.log(start_date)
+        var base_date = new DateTime(start_date.getFullYear(),start_date.getMonth()+1,start_date.getDate()-1);
+        console.log(base_date.format("yyyy-MM-dd"));
+        var expire_date = base_date.addMonths(1);
+        expire_date = expire_date.addDays(-2);
+        console.log(expire_date.format("yyyy-MM-dd"));
+        $("#expire-date").val(expire_date.format("yyyy-MM-dd"));
+    } else {
+        $("#expire-date").val("1911-01-01");
+    }
+  }
+
+
+  function ajax_exe() {
+        $.get( "{{ url_for('admin.get_fee_span') }}",
+           { fee_id: $("#fee-standard").val(),
+             charge_count: "1",
+             start_date: $("#start-date").val()
+           },
+            function(data){
+               $("#expire-date").val(data.expire_date);
+            }
+        );
+  }
+
 </script>
 
 {% endblock %}

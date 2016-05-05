@@ -214,9 +214,9 @@ class AddFeeStandardForm(Form):
 
 
 class ChargeFeeForm(Form):
-    start_time = DateField('选择日期', id="start-date", format='%Y-%m-%d')
-    end_time = DateField('终止时间', id="end-date")
-    fee = SelectField('收费标准', coerce=int)
+    start_date = DateField('选择日期', id="start-date", format='%Y-%m-%d')
+    expire_date = DateField('终止时间', id="expire-date")
+    fee = SelectField('收费标准', id="fee-standard", coerce=int)
     submit = SubmitField('提交')
 
     def __init__(self, *args, **kwargs):

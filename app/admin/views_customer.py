@@ -4,9 +4,10 @@
 收费
 """
 import datetime
+from dateutil.relativedelta import relativedelta
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_, or_, not_
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import admin
@@ -14,7 +15,7 @@ from .forms import AddPersonalUserForm, ModifyPersonalUserForm,ChangeUserPasswor
     AddCorpCustomerForm, ModifyCorpCustomerForm, AddFeeStandardForm, ChargeFeeForm
 
 from .. import db, check_empty
-from ..user_models import User, UserType, Agency, Fee, FeeRecord, RoleGroup
+from ..user_models import User, UserType, Agency, Fee, FeeRecord, RoleGroup, TimeLengthType
 from .menu_factory import get_nav_menu, get_tab_menu
 
 
@@ -251,26 +252,72 @@ def fee_records():
                            tab_menu=get_tab_menu("customers", current_user, "缴费退费"))
 
 
-@admin.route('/admin/charge-fee-tmp/<int:customer_id>',methods=['GET', 'POST'])
-@login_required
-def charge_fee_tmp(customer_id):
-    """记录用户缴费
+def get_fee_start_date( customer_id ):
+    """获取用户续费的起始日期
     """
-    fee_records = FeeRecord.query.filter_by(customer_id=customer_id).all()
+    # 如果是新用户，则终止日期和创建日期非常的接近，1秒以内，则选择当前日
+    customer = User.query.filter_by(user_id=customer_id).one()
+    fee_start_time = datetime.datetime.now()
+    if customer.expire_time-customer.create_time > datetime.timedelta(minutes=1):
+        # 如果终止日期早于当前日期，则还是选择当前日期，否则选择终止日期下一日
+        if customer.expire_time > fee_start_time:
+            fee_start_time = customer.expire_time + datetime.timedelta(days=1)
+    return fee_start_time, customer
+
+
+@admin.route('/admin/fee-span')
+@login_required
+def get_fee_span():
+    """根据fee类型，起始日期，计算出终止日期
+    """
+    fee_id = request.args.get('fee_id', 1, type=int)
+    fee = Fee.query.filter_by(fee_id=fee_id).one()
+    charge_count = request.args.get('charge_count', 1, type=int)
+    start_date_str = request.args.get('start_date', datetime.date.today().strftime("%Y-%m-%d"), type=str)
+    start_date = datetime.datetime.strptime(start_date_str,"%Y-%m-%d")
+    if fee.time_length_type==TimeLengthType.MONTHS:
+        expire_date = start_date+relativedelta(months=1,days=-1)
+    elif fee.time_length_type==TimeLengthType.DAYS:
+        expire_date = start_date + datetime.timedelta(days=charge_count*fee.time_length-1)
+    else:
+        raise ValueError()
+
+    return jsonify({
+        'start_date': start_date.strftime("%Y-%m-%d"),
+        'expire_date': expire_date.strftime("%Y-%m-%d")
+    })
+
+
+@admin.route('/admin/charge-fee/<int:customer_id>',methods=['GET', 'POST'])
+@login_required
+def charge_fee(customer_id):
+    """记录用户缴费
+
+       这里有个大bug，如果用户缴费不连续，那么中间的空挡期访问控制成问题了！！所以还得用RecordHistory来
+       控制，在登录的时候进行详细验证。
+       在User Table里面还是不加入expire_time为好！！
+    """
+    fee_records = FeeRecord.query.filter_by(customer_id=customer_id).\
+        order_by(FeeRecord.expire_time.desc()).all()
+
+    fee_start_time, customer = get_fee_start_date(customer_id)
+
     form = ChargeFeeForm()
     if form.validate_on_submit():
         fee_record = FeeRecord()
         fee_record.customer_id = customer_id
         fee_record.fee_id = form.fee.data
         fee_record.collector_id = current_user.user_id
-        fee_record.start_time = form.start_time.data
+        fee_record.start_time = form.start_date.data
+        fee_record.expire_time = form.expire_date.data
+        # ??? 这里还要更新costomer的expire_time
         db.session.add(fee_record)
         db.session.commit()
         flash('收费已经添加')
-        return redirect(url_for('admin.charge_fee_tmp',customer_id=customer_id))
+        return redirect(url_for('admin.charge_fee',customer_id=customer_id))
 
     if request.method == "GET":
-        form.start_time.data = datetime.date.today()
+        form.start_date.data = fee_start_time
     return render_template("admin/charge_fee.html", form=form, fee_records=fee_records,
                            title="用户缴费", nav_menu=get_nav_menu(current_user),
                            tab_menu=get_tab_menu("customers", current_user, "缴费退费"))

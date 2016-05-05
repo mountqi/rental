@@ -1,13 +1,13 @@
 """empty message
 
-Revision ID: a7dd177cfc7d
+Revision ID: b495bbb072fd
 Revises: None
-Create Date: 2016-05-03 22:37:08.675961
+Create Date: 2016-05-05 10:24:49.687333
 
 """
 
 # revision identifiers, used by Alembic.
-revision = 'a7dd177cfc7d'
+revision = 'b495bbb072fd'
 down_revision = None
 
 from alembic import op
@@ -22,7 +22,6 @@ def upgrade():
     sa.Column('corp_license_no', sa.String(length=64), nullable=True),
     sa.Column('create_time', sa.DateTime(), nullable=True),
     sa.Column('sub_account_no', sa.Integer(), nullable=True),
-    sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('agency_id'),
     sa.UniqueConstraint('corp_name')
     )
@@ -73,7 +72,9 @@ def upgrade():
     sa.Column('collector_id', sa.Integer(), nullable=True),
     sa.Column('fee_id', sa.Integer(), nullable=True),
     sa.Column('start_time', sa.DateTime(), nullable=True),
+    sa.Column('expire_time', sa.DateTime(), nullable=True),
     sa.Column('charge_time', sa.DateTime(), nullable=True),
+    sa.Column('is_valid', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['collector_id'], ['users.user_id'], ),
     sa.ForeignKeyConstraint(['customer_id'], ['users.user_id'], ),
     sa.ForeignKeyConstraint(['fee_id'], ['fees.fee_id'], ),

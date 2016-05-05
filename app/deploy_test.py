@@ -1,3 +1,4 @@
+import datetime
 from . import db, login_manager
 from .user_models import User, RoleGroup, UserType, Agency, Fee, FeeRecord, TimeLengthType
 
@@ -103,9 +104,25 @@ def deploy_test():
         db.session.add(fee)
         db.session.commit()
 
+
+    feeDays = Fee.query.filter_by(fee_name="周付400").first()
+    if not feeDays:
+        feeDays = Fee(fee_name="周付400")
+        feeDays.amount = 400
+        feeDays.discount = 1.0
+        feeDays.tickets_no = 30
+        feeDays.time_length = 7
+        feeDays.time_length_type = TimeLengthType.DAYS
+        db.session.add(feeDays)
+        db.session.commit()
+
     fee_record = FeeRecord()
     fee_record.collector_id = customeradmin.user_id
     fee_record.customer_id = personalcustomer.user_id
     fee_record.fee_id = fee.fee_id
+    fee_record.start_time = datetime.datetime.now()
+    fee_record.expire_time = fee_record.start_time + datetime.timedelta(days=31)
     db.session.add(fee_record)
+    personalcustomer.expire_time = fee_record.expire_time
+    db.session.add(personalcustomer)
     db.session.commit()
