@@ -45,7 +45,6 @@
 <script src="{{ url_for('static', filename='js/datetime.1-1.js') }}"></script>
 <script>
   $(function() {
-
     $.datepicker.regional["zh-CN"] = { closeText: "关闭", prevText: "&#x3c;上月", nextText: "下月&#x3e;", currentText: "今天",
         monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
         monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
@@ -56,35 +55,12 @@
 
     $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
 
-    $( "#start-date" ).datepicker();
-    $( "#start-date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-
-    //update_expire_date()
-    $("#start-date").change(ajax_exe)
-
+    $("#start-date").datepicker();
+    $("#start-date").datepicker( "option", "dateFormat", "yy-mm-dd" );
+    $("#start-date").change(ajax_update_expire_date)
   });
 
-
-  function update_expire_date() {
-    console.log($("#start-date").val())
-    // 根据start_date设定expire_date
-    var DATE_FORMAT = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/;
-    if(DATE_FORMAT.test( $("#start-date").val() )){
-        var start_date = new Date($("#start-date").val());
-        console.log(start_date)
-        var base_date = new DateTime(start_date.getFullYear(),start_date.getMonth()+1,start_date.getDate()-1);
-        console.log(base_date.format("yyyy-MM-dd"));
-        var expire_date = base_date.addMonths(1);
-        expire_date = expire_date.addDays(-2);
-        console.log(expire_date.format("yyyy-MM-dd"));
-        $("#expire-date").val(expire_date.format("yyyy-MM-dd"));
-    } else {
-        $("#expire-date").val("1911-01-01");
-    }
-  }
-
-
-  function ajax_exe() {
+  function ajax_update_expire_date() {
         $.get( "{{ url_for('admin.get_fee_span') }}",
            { fee_id: $("#fee-standard").val(),
              charge_count: "1",

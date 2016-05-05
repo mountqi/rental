@@ -46,10 +46,10 @@ def deploy_test():
         db.session.add(user)
         db.session.commit()
 
-    personalcustomer = User.query.filter_by(login_name="personalcustomer").first()
+    personalcustomer = User.query.filter_by(login_name="13916608435").first()
     if not personalcustomer:
-        personalcustomer = User(login_name="personalcustomer")
-        personalcustomer.password = "test"
+        personalcustomer = User(login_name="13916608435")
+        personalcustomer.password = "testtest"
         personalcustomer.role = RoleGroup.query.filter_by(name="个人用户组").first()
         personalcustomer.user_type = UserType.PERSONAL_CUSTOMER
         db.session.add(personalcustomer)

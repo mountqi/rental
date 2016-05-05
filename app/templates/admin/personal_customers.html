@@ -19,7 +19,6 @@
              <th>账号</th>
              <th>姓名</th>
              <th>创建日</th>
-             <th>截止日</th>
              <th>状态</th>
           </tr>
        </thead>
@@ -34,7 +33,6 @@
              </td>
              <td>{{check_empty(user.name)}}</td>
              <td>{{date_format(user.create_time)}}</td>
-             <td>{{date_format(user.expire_time)}}</td>
              <td>{{user.get_active_state_str()}}</td>
           </tr>
         {% endfor %}

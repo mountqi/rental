@@ -210,9 +210,9 @@ class User(UserMixin, db.Model):
     id_card_no = db.Column(db.String(20))
     role_id = db.Column(db.Integer, db.ForeignKey('role_groups.role_id'))
     create_time = db.Column(db.DateTime(), default=datetime.now)
-    expire_time = db.Column(db.DateTime(), default=datetime.now)
+    # expire_time = db.Column(db.DateTime(), default=datetime.now)
     user_type = db.Column(db.Integer)
-    is_active = db.Column(db.Boolean,default=False)
+    is_active = db.Column(db.Boolean,default=False) # 这个只对后台管理员有效吧，前端用户看缴费时段
     agency_id = db.Column(db.Integer, db.ForeignKey('agencies.agency_id'))
     remark = db.Column(db.String(256))
 

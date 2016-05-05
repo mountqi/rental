@@ -258,10 +258,13 @@ def get_fee_start_date( customer_id ):
     # 如果是新用户，则终止日期和创建日期非常的接近，1秒以内，则选择当前日
     customer = User.query.filter_by(user_id=customer_id).one()
     fee_start_time = datetime.datetime.now()
+    """
     if customer.expire_time-customer.create_time > datetime.timedelta(minutes=1):
         # 如果终止日期早于当前日期，则还是选择当前日期，否则选择终止日期下一日
+        # ?? 这里出问题了！！
         if customer.expire_time > fee_start_time:
             fee_start_time = customer.expire_time + datetime.timedelta(days=1)
+    """
     return fee_start_time, customer
 
 
