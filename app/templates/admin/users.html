@@ -34,13 +34,7 @@
              <td>{{check_empty(user.name)}}</td>
              <td>{{check_empty(user.phone_no)}}</td>
              <td>{{user.role.name}}</td>
-             <td>
-                 {% if user.is_active %}
-                     有效
-                 {% else %}
-                     停用
-                 {% endif %}
-             </td>
+             <td>{{user.get_active_state_str()}}</td>
           </tr>
         {% endfor %}
 

@@ -255,17 +255,30 @@ def fee_records():
 def get_fee_start_date( customer_id ):
     """获取用户续费的起始日期
     """
-    # 如果是新用户，则终止日期和创建日期非常的接近，1秒以内，则选择当前日
-    customer = User.query.filter_by(user_id=customer_id).one()
-    fee_start_time = datetime.datetime.now()
+    # 如果是新用户，没有缴费记录，则以今天为提示起始日期
+    # 如果是缴费用户，则以最晚的缴费记录的expire_time为提示起始日期
+    last_fee_record = FeeRecord.query.filter_by(customer_id=customer_id). \
+        filter_by(is_valid=True). \
+        order_by(FeeRecord.expire_time.desc()).first()
+
+    if not last_fee_record:
+        fee_start_time = datetime.datetime.now()
+    else:
+        fee_start_time = last_fee_record.expire_time + datetime.timedelta(days=1)
+
+    return fee_start_time
+
+def get_fee_expire_date( start_date, fee_id, charge_count ):
+    """给出起始日期，收费类型和数量，计算截止日期
     """
-    if customer.expire_time-customer.create_time > datetime.timedelta(minutes=1):
-        # 如果终止日期早于当前日期，则还是选择当前日期，否则选择终止日期下一日
-        # ?? 这里出问题了！！
-        if customer.expire_time > fee_start_time:
-            fee_start_time = customer.expire_time + datetime.timedelta(days=1)
-    """
-    return fee_start_time, customer
+    fee = Fee.query.filter_by(fee_id=fee_id).one()
+    if fee.time_length_type == TimeLengthType.MONTHS:
+        expire_date = start_date + relativedelta(months=1, days=-1)
+    elif fee.time_length_type == TimeLengthType.DAYS:
+        expire_date = start_date + datetime.timedelta(days=charge_count * fee.time_length - 1)
+    else:
+        raise ValueError()
+    return expire_date
 
 
 @admin.route('/admin/fee-span')
@@ -274,22 +287,45 @@ def get_fee_span():
     """根据fee类型，起始日期，计算出终止日期
     """
     fee_id = request.args.get('fee_id', 1, type=int)
-    fee = Fee.query.filter_by(fee_id=fee_id).one()
     charge_count = request.args.get('charge_count', 1, type=int)
     start_date_str = request.args.get('start_date', datetime.date.today().strftime("%Y-%m-%d"), type=str)
     start_date = datetime.datetime.strptime(start_date_str,"%Y-%m-%d")
-    if fee.time_length_type==TimeLengthType.MONTHS:
-        expire_date = start_date+relativedelta(months=1,days=-1)
-    elif fee.time_length_type==TimeLengthType.DAYS:
-        expire_date = start_date + datetime.timedelta(days=charge_count*fee.time_length-1)
-    else:
-        raise ValueError()
-
+    expire_date = get_fee_expire_date( start_date, fee_id, charge_count )
     return jsonify({
         'start_date': start_date.strftime("%Y-%m-%d"),
         'expire_date': expire_date.strftime("%Y-%m-%d")
     })
 
+
+def validate_time_span( customer_id, start_date, expire_date ):
+    """给出即将付费的时段，检查是否和已经付费的时段有重合，如果有则非法
+    如果付费时段已经过期，也非法
+    """
+    start_time = datetime.datetime(start_date.year,start_date.month,start_date.day)
+    expire_time = datetime.datetime(expire_date.year,expire_date.month,expire_date.day)
+    fee_records = FeeRecord.query.filter_by(customer_id=customer_id). \
+        filter_by(is_valid=True).all()
+
+    for record in fee_records:
+        if record.start_time <= start_time and record.expire_time >= start_time:
+            return False
+
+    for record in fee_records:
+        if record.start_time <= expire_time and record.expire_time >= expire_time:
+            return False
+
+    today = datetime.date.today()
+    today_time = datetime.datetime(today.year,today.month,today.day)
+    if start_time<today_time or expire_time<today_time:
+        return False
+
+    return True
+
+    # 下面这段有问题，以后再访
+    # fee_records = FeeRecord.query.filter_by(customer_id=customer_id). \
+    #     filter_by(is_valid=True). \
+    #     filter_by(FeeRecord.start_time <= start_time). \
+    #     filter_by(FeeRecord.start_time >= expire_time).all()
 
 @admin.route('/admin/charge-fee/<int:customer_id>',methods=['GET', 'POST'])
 @login_required
@@ -300,27 +336,34 @@ def charge_fee(customer_id):
        控制，在登录的时候进行详细验证。
        在User Table里面还是不加入expire_time为好！！
     """
-    fee_records = FeeRecord.query.filter_by(customer_id=customer_id).\
+    fee_records = FeeRecord.query.filter_by(customer_id=customer_id). \
+        filter_by(is_valid=True).\
         order_by(FeeRecord.expire_time.desc()).all()
-
-    fee_start_time, customer = get_fee_start_date(customer_id)
 
     form = ChargeFeeForm()
     if form.validate_on_submit():
-        fee_record = FeeRecord()
-        fee_record.customer_id = customer_id
-        fee_record.fee_id = form.fee.data
-        fee_record.collector_id = current_user.user_id
-        fee_record.start_time = form.start_date.data
-        fee_record.expire_time = form.expire_date.data
-        # ??? 这里还要更新costomer的expire_time
-        db.session.add(fee_record)
-        db.session.commit()
-        flash('收费已经添加')
-        return redirect(url_for('admin.charge_fee',customer_id=customer_id))
+        fee_id = form.fee.data
+        start_date = form.start_date.data
+        expire_date = get_fee_expire_date(start_date, fee_id, 1)
+        if validate_time_span(customer_id, start_date, expire_date):
+            fee_record = FeeRecord()
+            fee_record.customer_id = customer_id
+            fee_record.fee_id = form.fee.data
+            fee_record.collector_id = current_user.user_id
+            fee_record.start_time = form.start_date.data
+            fee_record.expire_time = form.expire_date.data
+            db.session.add(fee_record)
+            db.session.commit()
+            flash('收费已经添加')
+            return redirect(url_for('admin.charge_fee',customer_id=customer_id))
+        else:
+            flash('付费时段有问题，请重新选择')
 
     if request.method == "GET":
+        fee_start_time = get_fee_start_date(customer_id)
         form.start_date.data = fee_start_time
+        form.expire_date.data = get_fee_expire_date(fee_start_time, form.fee.choices[0][0], 1)
+
     return render_template("admin/charge_fee.html", form=form, fee_records=fee_records,
                            title="用户缴费", nav_menu=get_nav_menu(current_user),
                            tab_menu=get_tab_menu("customers", current_user, "缴费退费"))

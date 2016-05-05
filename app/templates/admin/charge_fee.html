@@ -15,7 +15,7 @@
         <table class="table table-condensed">
            <thead>
               <tr>
-                 <th>日期</th>
+                 <th>有效时段</th>
                  <th>金额</th>
                  <th>收费标准</th>
               </tr>
@@ -24,7 +24,7 @@
 
             {% for fee_record in fee_records %}
               <tr>
-                  <td>{{date_format(fee_record.charge_time)}}</td>
+                  <td>{{date_format(fee_record.start_time)}}&nbsp;到&nbsp;{{date_format(fee_record.expire_time)}}</td>
                   <td>{{fee_record.fee.amount}}</td>
                   <td>{{fee_record.fee.fee_name}}</td>
               </tr>
@@ -58,6 +58,7 @@
     $("#start-date").datepicker();
     $("#start-date").datepicker( "option", "dateFormat", "yy-mm-dd" );
     $("#start-date").change(ajax_update_expire_date)
+    $("#fee-standard").change(ajax_update_expire_date)
   });
 
   function ajax_update_expire_date() {

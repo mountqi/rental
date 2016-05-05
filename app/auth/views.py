@@ -14,15 +14,16 @@ def is_paid_customer(customer):
     """检查当前中介用户是否在付费允许的时段内
     """
     now = datetime.datetime.now()
-    # 这一段不成功，将来再用
-    # valid_fee_records = customer.fee_records.filter_by( or_ ( \
-    #     FeeRecord.expire_time>=now,
-    #     FeeRecord.start_time<=now) ).all()
+
+    # 下面这个实现不成功，以后再访
+    # valid_fee_records = customer.fee_records.\
+    #     filter_by(FeeRecord.expire_time>=now).\
+    #     filter_by(FeeRecord.start_time<=now).all()
+    # return len(valid_fee_records)>0
 
     # 检查用户所有有效的付费记录
     valid_fee_records = customer.fee_records.filter_by(is_valid=True)\
                         .order_by(FeeRecord.expire_time.desc()).all()
-
     paid = False
     for record in valid_fee_records:
         if record.start_time<=now and record.expire_time>=now:
