@@ -22,7 +22,10 @@ db = SQLAlchemy()
 # toolbar = DebugToolbarExtension()
 
 login_manager = LoginManager()
-login_manager.session_protection = 'strong'
+
+# Mountqi: 暂时把强保护关闭了
+# login_manager.session_protection = 'strong'
+login_manager.session_protection = 'basic'
 login_manager.login_view = "auth.login"
 
 

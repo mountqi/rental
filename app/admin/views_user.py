@@ -17,6 +17,7 @@ from ..user_models import User, RoleGroup, UserType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
 from ..decorators import permission_required
 
+@admin.route('/')
 @admin.route('/admin')
 @login_required
 def index():
