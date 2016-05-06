@@ -13,9 +13,9 @@ from .forms import ChangeAdminUserInforForm, ChangePasswordForm, ModifyAdminUser
     AddAdminUserForm, AddModRoleGroupForm
 
 from .. import db, check_empty
-from ..user_models import User, RoleGroup, UserType
+from ..user_models import User, RoleGroup, UserType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
-
+from ..decorators import permission_required
 
 @admin.route('/admin')
 @login_required
@@ -79,6 +79,7 @@ def user_self_passwd():
 
 @admin.route('/admin/users',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_ADMIN_USER)
 def users():
     """后台用户列表
     """
@@ -93,6 +94,7 @@ def users():
 
 @admin.route('/admin/add-user',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_ADMIN_USER)
 def add_user():
     """添加后台用户
     """
@@ -124,6 +126,7 @@ def add_user():
 
 @admin.route('/admin/mod-user/<user_id>',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_ADMIN_USER)
 def mod_user(user_id):
     """查看和修改后台用户信息
     """
@@ -157,6 +160,7 @@ def mod_user(user_id):
 
 @admin.route('/admin/rolegroups',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_PMSN_GRP)
 def rolegroups():
     """查看用户组列表
     """
@@ -171,6 +175,7 @@ def rolegroups():
 
 @admin.route('/admin/add-rolegroup',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_PMSN_GRP)
 def add_rolegroup():
     """添加用户组
     """
@@ -202,6 +207,7 @@ def add_rolegroup():
 
 @admin.route('/admin/mod-rolegroup/<int:role_id>',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_PMSN_GRP)
 def mod_rolegroup(role_id):
     """查看和修改用户组
     """

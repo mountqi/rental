@@ -15,12 +15,14 @@ from .forms import AddPersonalUserForm, ModifyPersonalUserForm,ChangeUserPasswor
     AddCorpCustomerForm, ModifyCorpCustomerForm, AddFeeStandardForm, ChargeFeeForm
 
 from .. import db, check_empty
-from ..user_models import User, UserType, Agency, Fee, FeeRecord, RoleGroup, TimeLengthType
+from ..user_models import User, UserType, Agency, Fee, FeeRecord, RoleGroup, TimeLengthType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
+from ..decorators import permission_required
 
 
 @admin.route('/admin/personal-customers',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def personal_customers():
     """浏览个人用户
     """
@@ -36,6 +38,7 @@ def personal_customers():
 
 @admin.route('/admin/add-personal-user',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def add_personal_user():
     """添加个人用户
     """
@@ -69,6 +72,7 @@ def add_personal_user():
 
 @admin.route('/admin/mod-personal-user/<user_id>',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def mod_personal_user(user_id):
     """查看和修改个人用户信息
     """
@@ -99,6 +103,7 @@ def mod_personal_user(user_id):
 
 @admin.route('/admin/new-passwd/<int:user_id>',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def new_passwd(user_id):
     """为个人用户和公司用户设定新密码
     """
@@ -118,6 +123,7 @@ def new_passwd(user_id):
 
 @admin.route('/admin/corp-customers',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def corp_customers():
     """查看公司用户列表
     """
@@ -133,6 +139,7 @@ def corp_customers():
 
 @admin.route('/admin/add-corp-customer',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def add_corp_customer():
     """添加公司用户
     """
@@ -185,6 +192,7 @@ def add_corp_customer():
 
 @admin.route('/admin/mod-corp-customer/<user_id>',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def mod_corp_customer(user_id):
     """修改公司用户
     """
@@ -229,6 +237,7 @@ def mod_corp_customer(user_id):
 
 @admin.route('/admin/sub-corp-customers/<int:agency_id>',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def sub_corp_customers(agency_id):
     """查看公司用户的子账户列表
     """
@@ -241,6 +250,7 @@ def sub_corp_customers(agency_id):
 
 @admin.route('/admin/fee-records',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def fee_records():
     """暂时展示用户的缴费记录
     """
@@ -329,6 +339,7 @@ def validate_time_span( customer_id, start_date, expire_date ):
 
 @admin.route('/admin/charge-fee/<int:customer_id>',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def charge_fee(customer_id):
     """记录用户缴费
 
@@ -371,6 +382,7 @@ def charge_fee(customer_id):
 
 @admin.route('/admin/fee-standards',methods=['GET'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def fee_standards():
     """查看收费标准
     """
@@ -382,6 +394,7 @@ def fee_standards():
 
 @admin.route('/admin/add-fee-standard',methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADD_MOD_CUSTOMER)
 def add_fee_standard():
     """添加收费标准
     """
