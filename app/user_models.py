@@ -5,7 +5,6 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from markdown import markdown
 import bleach
 from flask import current_app, request, url_for
-#from flask.ext.login import UserMixin, AnonymousUserMixin
 from flask_login import UserMixin, AnonymousUserMixin
 from app.exceptions import ValidationError
 from . import db, login_manager
@@ -210,7 +209,6 @@ class User(UserMixin, db.Model):
     id_card_no = db.Column(db.String(20))
     role_id = db.Column(db.Integer, db.ForeignKey('role_groups.role_id'))
     create_time = db.Column(db.DateTime(), default=datetime.now)
-    # expire_time = db.Column(db.DateTime(), default=datetime.now)
     user_type = db.Column(db.Integer)
     is_active = db.Column(db.Boolean,default=True) # 这个只对后台管理员有效吧，前端用户看缴费时段
     agency_id = db.Column(db.Integer, db.ForeignKey('agencies.agency_id'))
@@ -288,7 +286,6 @@ class Agency(db.Model):
     corp_license_no = db.Column(db.String(64))
     create_time = db.Column(db.DateTime(), default=datetime.now)
     sub_account_no = db.Column(db.Integer)
-    # is_active = db.Column(db.Boolean, default=True)
 
     connected_users = db.relationship('User', backref='agency', lazy='dynamic')
 

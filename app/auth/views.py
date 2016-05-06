@@ -38,7 +38,6 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(login_name=form.login_name.data).first()
         if user is not None and user.verify_password(form.password.data):
-            #if user.user_type is not UserType.BACKEND_ADMIN and not is_paid_customer(user):
             if user.user_type is UserType.BACKEND_ADMIN and not user.is_valid():
                 flash('账户已经停用')
                 return render_template('auth/login.html', form=form)
