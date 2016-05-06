@@ -212,7 +212,7 @@ class User(UserMixin, db.Model):
     create_time = db.Column(db.DateTime(), default=datetime.now)
     # expire_time = db.Column(db.DateTime(), default=datetime.now)
     user_type = db.Column(db.Integer)
-    is_active = db.Column(db.Boolean,default=False) # 这个只对后台管理员有效吧，前端用户看缴费时段
+    is_active = db.Column(db.Boolean,default=True) # 这个只对后台管理员有效吧，前端用户看缴费时段
     agency_id = db.Column(db.Integer, db.ForeignKey('agencies.agency_id'))
     remark = db.Column(db.String(256))
 
@@ -242,8 +242,37 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return self.user_id
 
+    def is_valid(self):
+        # 1. 对于后台管理员，is_active=True表明有效
+        if self.user_type == UserType.BACKEND_ADMIN:
+            return self.is_active
+
+        # 2. 对于中介公司的子账户，其父账户在付费期内，则是有效的
+        if self.user_type == UserType.CORP_SUB_ACCOUNT:
+            parent = self.agency.connected_users.filter_by(user_type=UserType.COPR_CUSTOMER).one()
+            valid_fee_records = parent.fee_records.filter_by(is_valid=True) \
+                .order_by(FeeRecord.expire_time.desc()).all()
+        else:
+            # 3. 对于中介公司账号和个人用户账号，当前时间在付费期内，则是有效的
+            valid_fee_records = self.fee_records.filter_by(is_valid=True) \
+                .order_by(FeeRecord.expire_time.desc()).all()
+
+        # 检查付费期
+        now = datetime.now()
+        for record in valid_fee_records:
+            if record.start_time <= now and record.expire_time >= now:
+                return True
+        return False
+
+            # 下面这个实现不成功，以后再访
+            # valid_fee_records = customer.fee_records.\
+            #     filter_by(FeeRecord.expire_time>=now).\
+            #     filter_by(FeeRecord.start_time<=now).all()
+            # return len(valid_fee_records)>0
+
+
     def get_active_state_str(self):
-        if self.is_active:
+        if self.is_valid():
             return "有效"
         else:
             return "无效"

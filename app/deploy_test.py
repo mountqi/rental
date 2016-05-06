@@ -49,6 +49,8 @@ def deploy_test():
     personalcustomer = User.query.filter_by(login_name="13916608435").first()
     if not personalcustomer:
         personalcustomer = User(login_name="13916608435")
+        personalcustomer.name = "张小奇"
+        personalcustomer.phone_no = "13916608435"
         personalcustomer.password = "testtest"
         personalcustomer.role = RoleGroup.query.filter_by(name="个人用户组").first()
         personalcustomer.user_type = UserType.PERSONAL_CUSTOMER

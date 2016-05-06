@@ -9,10 +9,10 @@ from ..user_models import User, UserType, FeeRecord, Fee
 from .forms import LoginForm
 from . import auth
 
-
+"""
 def is_paid_customer(customer):
-    """检查当前中介用户是否在付费允许的时段内
-    """
+    #检查当前中介用户是否在付费允许的时段内
+
     now = datetime.datetime.now()
 
     # 下面这个实现不成功，以后再访
@@ -30,7 +30,7 @@ def is_paid_customer(customer):
             paid = True
             break
     return paid
-
+"""
 
 @auth.route('/auth/login', methods=['GET', 'POST'])
 def login():
@@ -38,7 +38,11 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(login_name=form.login_name.data).first()
         if user is not None and user.verify_password(form.password.data):
-            if user.user_type is not UserType.BACKEND_ADMIN and not is_paid_customer(user):
+            #if user.user_type is not UserType.BACKEND_ADMIN and not is_paid_customer(user):
+            if user.user_type is UserType.BACKEND_ADMIN and not user.is_valid():
+                flash('账户已经停用')
+                return render_template('auth/login.html', form=form)
+            elif not user.is_valid():
                 flash('亲爱的用户，您尚未付费，或者付费购买的时段已过期。请付费后登录！')
                 return render_template('auth/login.html', form=form)
 
