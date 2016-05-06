@@ -21,6 +21,7 @@
              <th>公司名称</th>
              <th>子账号数</th>
              <th>状态</th>
+             <th></th>
           </tr>
        </thead>
        <tbody>
@@ -39,6 +40,11 @@
                  </a>
              </td>
              <td>{{user.get_active_state_str()}}</td>
+             <td>
+                <a {%if not user.is_valid()%}class="invalid_user_link"{%endif%} href="{{ url_for('admin.charge_fee',customer_id=user.user_id) }}">
+                缴费
+                </a>
+             </td>
           </tr>
         {% endfor %}
 
