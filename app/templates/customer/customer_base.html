@@ -1,0 +1,48 @@
+{% extends "bootstrap/base.html" %}
+{% import "customer/_macro_pop_menu.html" as macro_pop_menu %}
+{% import "customer/_macro_nav_menu.html" as macro_nav_menu %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/c_styles.css') }}">
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<meta charset="utf-8">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+
+    <div class="row">
+
+        <div class="col-md-9">
+            <div class="navbar navbar-default" role="navigation">
+
+            {{ macro_pop_menu.render(g.pop_menu,id="customer_pop") }}
+            {{ macro_nav_menu.render(g.nav_menu,id="customer-nav") }}
+
+            </div>
+        </div>
+
+        <div class="col-md-3" id="search-form-area">
+
+            <form class="search-form" role="form">
+                <div class="input-group">
+                <input type="text" class="form-control">
+                <span class="input-group-addon glyphicon glyphicon-search"></span>
+                </div>
+            </form>
+            <br/>
+        </div>
+    </div>
+
+
+    {% endblock %}
+</div>
+
+
+
+{% endblock %}
+

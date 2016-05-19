@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, g, session
 
 # from flask.ext.login import login_user, logout_user, login_required, \
 #     current_user
@@ -7,10 +7,12 @@ from flask_login import login_user, logout_user, login_required, \
     current_user
 
 from .. import db
-from ..user_models import User, UserType
+from ..models_user import User, UserType
+from ..models_property import District
 # from ..email import send_email
-from .forms import LoginForm, DateForm
+from .forms import LoginForm, DateForm, AddEstateForm
 from . import experiment
+
 
 tab_menu = [
     ("个人用户","admin.personal_customers",False),
@@ -40,11 +42,15 @@ def base():
 
 
 from datetime import datetime, date
+from ..utils import set_session
 
 @experiment.route('/experiment/date', methods=['GET','POST'])
 def date1():
     form = DateForm()
     # form.start_time.data = date()
+    g.hello_today= datetime.now()
+
+    set_session('city',"北京")
 
     if form.validate_on_submit():
         flash('日期是 {}'.format(form.start_time.data))
@@ -52,4 +58,70 @@ def date1():
     form.start_time.data = date(2011,1,1)
     return render_template('/experiment/date.html',form=form)
 
+
+@experiment.route('/experiment/two-col-form', methods=['GET','POST'])
+def two_col_form():
+    form = AddEstateForm( city_id=1 )
+
+    if form.validate_on_submit():
+        flash('form are OK')
+
+    return render_template('/experiment/two_col_form.html',form=form)
+
+
+@experiment.route('/experiment/center-div', methods=['GET'])
+def center_div():
+    """
+    让一个div屏幕居中，好像不起作用！
+    """
+    return render_template('/experiment/center_div.html')
+
+
+@experiment.route('/experiment/gui', methods=['GET'])
+def gui():
+    """
+    """
+    return render_template('/experiment/gui.html')
+
+
+def rotate_order(order):
+    if order == 'no':
+        return "up"
+    elif order == 'up':
+        return "down"
+    elif order == 'down':
+        return 'up'
+    else:
+        return 'no'
+
+
+@experiment.route('/experiment/show-districts', methods=['GET'])
+def show_districts():
+    """
+    """
+    g.sort = request.args.get('sort', "districts", type=str)
+    g.order = request.args.get('order', "", type=str)
+    g.id_order = request.args.get('id_order', "", type=str)
+
+    if g.sort=="districts":
+        g.order = rotate_order(g.order)
+        g.id_order = "no"
+        if g.order == "up":
+            g.districts = District.query.order_by(District.district_name).all()
+        elif g.order == "down":
+            g.districts = District.query.order_by(District.district_name.desc()).all()
+        else:
+            g.districts = District.query.all()
+    else:
+        g.id_order = rotate_order(g.id_order)
+        g.order = "no"
+        if g.id_order == "up":
+            g.districts = District.query.order_by(District.district_id).all()
+        elif g.id_order == "down":
+            g.districts = District.query.order_by(District.district_id.desc()).all()
+        else:
+            g.districts = District.query.all()
+
+
+    return render_template('/experiment/show_districts.html')
 

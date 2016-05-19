@@ -1,0 +1,44 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+
+    <a href="{{ url_for('admin.add_city') }}">
+    <button type="button" class="btn btn-primary">添加城市</button>
+    </a>
+    <br/>
+    <br/>
+
+    <!-- 展示城市列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>城市</th>
+             <th>区号</th>
+             <th></th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for city in all_cities %}
+          <tr>
+             <td>
+                 {{city.city_name}}
+             </td>
+             <td>{{city.city_no}}</td>
+             <td>
+                删除
+             </td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+
+</div> <!-- the row class div -->
+
+
+{% endblock %}

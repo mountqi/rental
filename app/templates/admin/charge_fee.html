@@ -58,10 +58,9 @@
 
     $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
 
-    $("#start-date").datepicker();
-    $("#start-date").datepicker( "option", "dateFormat", "yy-mm-dd" );
-    $("#start-date").change(ajax_update_expire_date)
+    $("#start-date").datepicker().datepicker( "option", "dateFormat", "yy-mm-dd" ).change(ajax_update_expire_date)
     $("#fee-standard").change(ajax_update_expire_date)
+    $('#expire-date').attr("readonly","readonly")
   });
 
   function ajax_update_expire_date() {

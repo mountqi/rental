@@ -1,0 +1,47 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <div class="col-md-4">
+        <p>{{g.property.city.city_name}}{{g.property.district.district_name}}</p>
+        <p>{{g.property.estate.address}}&nbsp;{{g.property.estate.estate_name}}</p>
+        <p>{{g.property.build_no}}&nbsp;{{g.property.room_no}}</p>
+        <p>房东：{{g.property.owner_name}}</p>
+        <p>电话：{{g.property.contact_tel}}</p>
+        <br/>
+        <br/>
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    <div class="col-md-4">
+       <!-- 展示房源跟进记录 -->
+        <table class="table table-condensed">
+           <thead>
+              <tr>
+                 <th>时间</th>
+                 <th>跟进人</th>
+                 <th>内容</th>
+              </tr>
+           </thead>
+           <tbody>
+
+            {% for follow in g.follows %}
+              <tr>
+                  <td>{{datetime_format(follow.follow_time)}}</td>
+                  <td>{{follow.user.login_name}}</td>
+                  <td>{{follow.follow_content}}</td>
+              </tr>
+            {% endfor %}
+
+           </tbody>
+        </table>
+    </div>
+
+</div> <!-- the row class div -->
+
+<br/>
+
+{% endblock %}

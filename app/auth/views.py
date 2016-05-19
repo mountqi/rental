@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user, login_required, \
 
 from sqlalchemy import and_, or_, not_
 from .. import db
-from ..user_models import User, UserType, FeeRecord, Fee
+from ..models_user import User, UserType, FeeRecord, Fee
 from .forms import LoginForm
 from . import auth
 

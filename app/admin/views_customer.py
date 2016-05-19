@@ -11,11 +11,11 @@ from flask import render_template, redirect, request, url_for, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import admin
-from .forms import AddPersonalUserForm, ModifyPersonalUserForm,ChangeUserPasswordForm, \
+from .forms_customer import AddPersonalUserForm, ModifyPersonalUserForm,ChangeUserPasswordForm, \
     AddCorpCustomerForm, ModifyCorpCustomerForm, AddFeeStandardForm, ChargeFeeForm
 
 from .. import db, check_empty
-from ..user_models import User, UserType, Agency, Fee, FeeRecord, RoleGroup, TimeLengthType, Permission
+from ..models_user import User, UserType, Agency, Fee, FeeRecord, RoleGroup, TimeLengthType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
 from ..decorators import permission_required
 
@@ -36,7 +36,7 @@ def personal_customers():
                            tab_menu=get_tab_menu("customers", current_user, "个人用户"))
 
 
-@admin.route('/admin/add-personal-user',methods=['GET', 'POST'])
+@admin.route('/admin/add-personal-customer',methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.ADD_MOD_CUSTOMER)
 def add_personal_user():
@@ -336,6 +336,7 @@ def validate_time_span( customer_id, start_date, expire_date ):
     #     filter_by(is_valid=True). \
     #     filter_by(FeeRecord.start_time <= start_time). \
     #     filter_by(FeeRecord.start_time >= expire_time).all()
+
 
 @admin.route('/admin/charge-fee/<int:customer_id>',methods=['GET', 'POST'])
 @login_required

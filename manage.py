@@ -8,7 +8,9 @@ if os.environ.get('FLASK_COVERAGE'):
 
 
 from app import create_app, db
-from app.user_models import User, RoleGroup, Permission, Agency, FeeRecord, Fee
+from app.models_user import User, RoleGroup, Permission, Agency, FeeRecord, Fee
+from app.models_property import City, District, Area, Estate
+
 
 # from flask.ext.script import Manager, Shell
 # from flask.ext.migrate import Migrate, MigrateCommand
@@ -22,7 +24,8 @@ migrate = Migrate(app, db)
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, RoleGroup=RoleGroup,
-                Permission=Permission, Agency=Agency, Fee=Fee, FeeRecord=FeeRecord)
+                Permission=Permission, Agency=Agency, Fee=Fee, FeeRecord=FeeRecord,
+                City=City, District=District, Area=Area, Estate=Estate)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
 manager.add_command('db', MigrateCommand)

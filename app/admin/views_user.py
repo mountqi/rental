@@ -9,15 +9,27 @@ from flask_login import login_user, logout_user, login_required, \
 from sqlalchemy.exc import IntegrityError
 
 from . import admin
-from .forms import ChangeAdminUserInforForm, ChangePasswordForm, ModifyAdminUserForm,\
+from .forms_user import ChangeAdminUserInforForm, ChangePasswordForm, ModifyAdminUserForm,\
     AddAdminUserForm, AddModRoleGroupForm
 
 from .. import db, check_empty
-from ..user_models import User, RoleGroup, UserType, Permission
+from ..models_user import User, RoleGroup, UserType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
 from ..decorators import permission_required
 
+
 @admin.route('/')
+@login_required
+def home():
+    """首页
+    """
+    if current_user.is_backend_admin():
+        return redirect(url_for('admin.index'))
+    else:
+        return redirect(url_for('customer.index'))
+
+
+
 @admin.route('/admin')
 @login_required
 def index():

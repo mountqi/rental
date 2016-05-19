@@ -1,0 +1,53 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    {%- set _enctype = [] %}
+    {%- if enctype is none -%}
+      {%- for field in form %}
+        {%- if field.type == 'FileField' %}
+          {#- for loops come with a fairly watertight scope, so this list-hack is
+              used to be able to set values outside of it #}
+          {%- set _ = _enctype.append('multipart/form-data') -%}
+        {%- endif %}
+      {%- endfor %}
+    {%- else %}
+      {% set _ = _enctype.append(enctype) %}
+    {%- endif %}
+
+    <form method="POST"   class="form" role="form" {%- if _enctype[0] %} enctype="{{_enctype[0]}}"{% endif -%} >
+    <div class="col-md-3">
+        {{ form.csrf_token }}
+
+        {{ wtf.form_field(form.estate_name) }}
+        {{ wtf.form_field(form.district) }}
+        {{ wtf.form_field(form.area) }}
+        {{ wtf.form_field(form.english_name) }}
+        {{ wtf.form_field(form.zhpy) }}
+        {{ wtf.form_field(form.complete_year) }}
+        {{ wtf.form_field(form.address) }}
+        {{ wtf.form_field(form.developer) }}
+        {{ wtf.form_field(form.mgt_company) }}
+
+    </div>
+    <div class="col-md-3">
+        {{ wtf.form_field(form.mgt_fee) }}
+        {{ wtf.form_field(form.total_sqare) }}
+        {{ wtf.form_field(form.total_houses) }}
+        {{ wtf.form_field(form.floor_area_ratio) }}
+        {{ wtf.form_field(form.parking_no) }}
+        {{ wtf.form_field(form.green_rate) }}
+        {{ wtf.form_field(form.introduction) }}
+        {{ wtf.form_field(form.submit) }}
+    </div>
+    </form>
+
+</div> <!-- the row class div -->
+
+<br/>
+<br/>
+
+{% endblock %}

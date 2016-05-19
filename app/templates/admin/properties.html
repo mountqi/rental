@@ -1,0 +1,155 @@
+{% extends "admin/admin_base.html" %}
+{% import "_macro_page.html" as macro_page %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+    <!--<div class="col-md-6">-->
+        <!--{{ g.city_form.city.label }} &nbsp; {{ g.city_form.city() }}-->
+    <!--</div>-->
+
+    <!--<div class="col-md-2">-->
+        <!--{{ g.district_form.district.label }} &nbsp; {{ g.district_form.district() }}-->
+    <!--</div>-->
+
+    <!--<div class="col-md-2">-->
+        <!--{{ g.estate_form.estate.label }} &nbsp; {{ g.estate_form.estate() }}-->
+    <!--</div>-->
+
+    <!--<div class="col-md-2">-->
+        <!--{{ g.area_form.area.label }} &nbsp; {{ g.area_form.area() }}-->
+    <!--</div>-->
+
+    <!--<div class="col-md-2">-->
+        <!--{{ g.source_form.source.label }} &nbsp; {{ g.source_form.source() }}-->
+    <!--</div>-->
+
+    <div class="col-md-8">
+        {{ g.city_form.city.label }} &nbsp; {{ g.city_form.city() }} &nbsp;&nbsp;&nbsp;&nbsp;
+        {{ g.district_form.district.label }} &nbsp; {{ g.district_form.district() }} &nbsp;&nbsp;&nbsp;&nbsp;
+        {{ g.estate_form.estate.label }} &nbsp; {{ g.estate_form.estate() }} &nbsp;&nbsp;&nbsp;&nbsp;
+        {{ g.area_form.area.label }} &nbsp; {{ g.area_form.area() }} &nbsp;&nbsp;&nbsp;&nbsp;
+        {{ g.source_form.source.label }} &nbsp; {{ g.source_form.source() }}
+    </div>
+
+    <div class="col-md-4">
+        {%if g.city_id %}
+        <a href="{{ url_for('admin.add_property', city_id=g.city_id, district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id) }}">
+        <button type="button" class="btn btn-primary">添加房源</button>
+        </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <!--这里应该用选择好的distrit,area等！！在javascript里面做！！-->
+        <a href="{{ url_for('admin.batch_mod_property', city_id=g.city_id, district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id) }}">
+        <button type="button" class="btn btn-primary">批量修改房源</button>
+        </a>
+
+        {%endif%}
+    </div>
+
+    <!--<div class="col-md-2">-->
+        <!--{%if g.city_id %}-->
+        <!--&lt;!&ndash;这里应该用选择好的distrit,area等！！在javascript里面做！！&ndash;&gt;-->
+        <!--<a href="{{ url_for('admin.batch_mod_property', city_id=g.city_id, district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id) }}">-->
+        <!--<button type="button" class="btn btn-primary">批量修改房源</button>-->
+        <!--</a>-->
+        <!--{%endif%}-->
+    <!--</div>-->
+
+</div> <!-- the row class div -->
+
+    <p></p>
+    <p></p>
+
+<div class="row ">
+
+    {%if g.all_properties and len(g.all_properties)>0 %}
+    <!-- 展示房源列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>楼盘/小区</th>
+             <th>楼栋号</th>
+             <th>楼层</th>
+             <th>房间</th>
+             <th>房东</th>
+             <th>来源</th>
+             <th>更新时间</th>
+             <th></th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for p in g.all_properties %}
+          <tr>
+             <td>
+                {{p.estate.estate_name}}
+             </td>
+             <td>
+                {{p.build_no}}
+             </td>
+             <td>
+                {{p.floor}}/{{p.floor_all}}
+             </td>
+             <td>
+                <a href="{{ url_for('admin.mod_property', property_id=p.property_id, city_id=g.city_id,
+                    district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id, next=prev_url ) }}">
+                {{p.room_no}}
+                </a>
+             </td>
+             <td>
+                {{p.owner_name}}
+             </td>
+            <td>
+                {{p.source}}
+             </td>
+             <td>
+                {{datetime_format(p.valid_time)}}
+
+             <td>
+                <a href="{{ url_for('admin.follow_property', property_id=p.property_id, city_id=g.city_id,
+                    district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id, next=prev_url ) }}">
+                跟进
+                </a>
+             </td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+    {%else%}
+        <p>楼盘还没有添加</p>
+    {%endif%}
+
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.properties', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script>
+
+  $(function() {
+    $("#city_selection").change(ajax_update_property_list)
+    $("#district_selection").change(ajax_update_property_list)
+    $("#estate_selection").change(ajax_update_property_list)
+    $("#area_selection").change(ajax_update_property_list)
+    $("#source_selection").change(ajax_update_property_list)
+  });
+
+  function ajax_update_property_list() {
+        window.location = $(this).val()
+  }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "admin/admin_base.html" %}
+{% import "_macro_page.html" as macro_page %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+    <div class="col-md-2">
+        {{ g.city_form.city.label }} &nbsp; {{ g.city_form.city() }}
+    </div>
+
+    <div class="col-md-2">
+        {{ g.district_form.district.label }} &nbsp; {{ g.district_form.district() }}
+    </div>
+
+    <div class="col-md-2">
+        {{ g.area_form.area.label }} &nbsp; {{ g.area_form.area() }}
+    </div>
+
+    <div class="col-md-2">
+        {%if g.city_id %}
+        <a href="{{ url_for('admin.add_estate', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id) }}">
+        <button type="button" class="btn btn-primary">添加楼盘/小区</button>
+        </a>
+        {%endif%}
+    </div>
+</div> <!-- the row class div -->
+
+    <p></p>
+    <p></p>
+
+<div class="row ">
+
+    {%if g.all_estates and len(g.all_estates)>0 %}
+    <!-- 展示楼盘列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>楼盘</th>
+             <th></th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for estate in g.all_estates %}
+          <tr>
+             <td>
+                 <a href="{{ url_for('admin.mod_estate',city_id=g.city_id, estate_id=estate.estate_id) }}">
+                 {{estate.estate_name}}
+                 </a>
+             </td>
+             <td>
+                删除
+             </td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+    {%else%}
+        <p>楼盘还没有添加</p>
+    {%endif%}
+
+
+</div> <!-- the row class div -->
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'admin.estates', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script>
+
+  $(function() {
+    $("#city_selection").change(ajax_update_estate_list)
+    $("#district_selection").change(ajax_update_estate_list)
+    $("#area_selection").change(ajax_update_estate_list)
+  });
+
+  function ajax_update_estate_list() {
+        window.location = $(this).val()
+        //console.log( $(this).val())
+  }
+
+</script>
+
+{% endblock %}

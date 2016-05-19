@@ -2,10 +2,40 @@
 
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<meta charset="utf-8">
+
+<style>
+
+    body {
+        background-color: black;
+    }
+
+    .container {
+        background-image:url(/static/image/login_bg2.jpg);
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #login_div {
+        color:rgb(255,255,255);
+        padding-top: 50px;
+        padding-bottom: 500px;
+    }
+</style>
+
+{% endblock %}
+
+
 {% block title %}City Rent - 登录{% endblock %}
 
 {% block page_content %}
-<div class="row">
+<div class="row" id="login_div">
     <div class="col-md-4">
     </div>
     <div class="col-md-4">
@@ -18,4 +48,6 @@
     <div class="col-md-4">
     </div>
 </div>
+
+
 {% endblock %}
