@@ -29,6 +29,9 @@
 <p>{{ moment().format('YYYY-MM-DD') }}</p>
 <p id="time1"></p>
 <p id="time2"></p>
+<p id="time3">{{g.hello_today}}</p>
+<p id="city">{{session['city']}}</p>
+
 
 </div>
 {% endblock %}
@@ -69,13 +72,15 @@
         $("#time1").text(date.format("yyyy-MM-dd"))
         date1 = date.addMonths(1)
         date1 = date1.addDays(-2)
-        $("#time2").text(date1.format("yyyy-MM-dd"))
+        $("#date2").val(date1.format("yyyy-MM-dd"))
     });
+
+    $('#date2').attr("readonly","readonly")
 
     // 日期正则表达式
     var DATE_FORMAT = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/;
     if(DATE_FORMAT.test("1922-03-04")){
-        $("#time2").text("格式正确")
+        $("#date2").val("1922-03-04")
      }
 
 

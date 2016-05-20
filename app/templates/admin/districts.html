@@ -1,0 +1,68 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+
+    {%if city%}
+    <a href="{{ url_for('admin.add_district', city_id=city_id) }}">
+    <button type="button" class="btn btn-primary">添加区县</button>
+    </a>
+    {%endif%}
+    <br/>
+    <br/>
+
+    {{ wtf.quick_form(city_form) }}
+
+    {%if all_districts and len(all_districts)>0%}
+    <!-- 展示城市列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>区县</th>
+             <th></th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for district in all_districts %}
+          <tr>
+             <td>
+                 {{district.district_name}}
+             </td>
+             <td>
+                删除
+             </td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+    {%else%}
+        <p>区县还没有添加</p>
+    {%endif%}
+
+
+</div> <!-- the row class div -->
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script>
+
+  $(function() {
+    $("#city_selection").change(ajax_update_districts)
+  });
+
+  function ajax_update_districts() {
+        window.location = $("#city_selection").val();
+  }
+
+</script>
+
+{% endblock %}

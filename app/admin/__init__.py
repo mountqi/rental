@@ -2,8 +2,8 @@ from flask import Blueprint
 
 admin = Blueprint('admin', __name__)
 
-from . import views_user,views_customer
-from ..user_models import Permission, role_dict, TimeLengthType
+from . import views_user,views_customer, views_property
+from ..models_user import Permission, role_dict, TimeLengthType
 from .. import check_empty
 
 def date_format(date_time):

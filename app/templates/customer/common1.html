@@ -1,0 +1,188 @@
+{% extends "customer/customer_base.html" %}
+
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <div class="col-md-1 drop-item">
+        {{ g.district_form.district.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.district_form.district( class="drop_list") }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.area_form.area.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.area_form.area(class="drop_list") }}
+    </div>
+
+
+    <div class="col-md-1 drop-item">
+        {{ g.subway_form.subway.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.subway_form.subway(class="drop_list") }}
+    </div>
+
+
+    <div class="col-md-1 drop-item">
+         {{ g.owner_type_form.owner_type.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+         {{ g.owner_type_form.owner_type(class="drop_list") }}
+    </div>
+
+</div> <!-- the row class div -->
+
+<div class="row ">
+    <div class="col-md-1 drop-item" >
+        {{ g.estate_form.estate.label }}
+    </div>
+
+    <div class="col-md-1 drop-item" >
+        {{ g.estate_form.estate(class="drop_list") }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.layout_form.layout.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.layout_form.layout(class="drop_list") }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.square_form.square.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.square_form.square(class="drop_list") }}
+    </div>
+
+
+    <div class="col-md-1 drop-item">
+        {{ g.price_form.price.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.price_form.price(class="drop_list") }}
+    </div>
+
+</div> <!-- the row class div -->
+
+<br/>
+
+
+<div class="row " id="propery-table">
+
+    {%if g.all_properties and len(g.all_properties)>0 %}
+    <!-- 展示房源列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>状态 <span class="glyphicon glyphicon-sort"></span></th>
+             <th>新鲜度 <span class="glyphicon glyphicon-sort"></span></th>
+             <th>点击量 <span class="glyphicon glyphicon-sort"></span></th>
+             <th>物业名称 <span class="glyphicon glyphicon-sort"></span></th>
+             <th>房型 <span class="glyphicon glyphicon-sort"></span></th>
+             <th>租金 <span class="glyphicon glyphicon-sort"></span></th>
+             <th>类型 <span class="glyphicon glyphicon-sort"></span></th>
+              <th>更新日期 <span class="glyphicon glyphicon-sort"></span></th>
+              <th>房源编号 <span class="glyphicon glyphicon-sort"></span></th>
+              <th>业主类型 <span class="glyphicon glyphicon-sort"></span></th>
+              <th>详细资料</th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for p in g.all_properties %}
+          <tr>
+             <td>
+                {{p.get_status()}}
+             </td>
+             <td>
+                100%
+             </td>
+             <td>
+                0
+             </td>
+             <td>
+                {{p.estate.estate_name}}
+             </td>
+
+             <td>
+                {{p.get_layout()}}
+             </td>
+
+            <td>
+                {{p.rent_price}}
+             </td>
+
+             <td>
+                {{p.property_type}}
+             </td>
+
+             <td>
+                {{datetime_format(p.valid_time)}}
+              </td>
+
+             <td>
+                {{p.get_id_str()}}
+             </td>
+
+              <td>
+                {{p.source}}
+             </td>
+
+              <td>
+                详细<span class="glyphicon glyphicon-chevron-down"></span>
+             </td>
+
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+    {%else%}
+        <!--<p>楼盘还没有添加</p>-->
+    {%endif%}
+
+
+</div> <!-- the row class div -->
+
+
+{% if pagination %}
+<div class="pagination">
+    {{ macro_page.pagination_widget(pagination, 'customer.index', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+
+  $(function() {
+    $("#city_selection").change(ajax_update_property_list)
+    $("#district_selection").change(ajax_update_property_list)
+    $("#estate_selection").change(ajax_update_property_list)
+    $("#area_selection").change(ajax_update_property_list)
+  });
+
+  function ajax_update_property_list() {
+        window.location = $(this).val()
+  }
+
+</script>
+
+{% endblock %}

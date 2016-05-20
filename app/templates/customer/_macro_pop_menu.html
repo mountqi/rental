@@ -1,0 +1,22 @@
+{% macro render(pop_menu,id="") %}
+{%if pop_menu%}
+<div class="dropdown", id={{id}}>
+   <button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
+        data-toggle="dropdown">
+         <span class="glyphicon glyphicon-list"></span>
+   </button>
+
+   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+   {% for menu in pop_menu["menu"] %}
+      <li role="presentation">
+          {%if menu[2]=="menu"%}
+            <a role="menuitem" tabindex="-1" href="{{url_for(menu[1])}}">{{menu[0]}}</a>
+          {%else%}
+            <li role="presentation" class="divider"></li>
+          {%endif%}
+      </li>
+   {% endfor %}
+   </ul>
+</div>
+{%endif%}
+{% endmacro %}

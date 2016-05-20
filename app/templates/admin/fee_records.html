@@ -1,5 +1,5 @@
 {% extends "admin/admin_base.html" %}
-{% import "admin/_macro_page.html" as macro_page %}
+{% import "_macro_page.html" as macro_page %}
 
 {% block page_content %}
 
@@ -12,7 +12,8 @@
        <thead>
           <tr>
              <th>日期</th>
-             <th>用户</th>
+             <th>账户</th>
+             <th>姓名</th>
              <th>金额</th>
              <th>收费标准</th>
           </tr>
@@ -23,6 +24,7 @@
           <tr>
               <td>{{date_format(fee_record.charge_time)}}</td>
               <td>{{fee_record.customer.login_name}}</td>
+              <td>{{fee_record.customer.name}}</td>
               <td>{{fee_record.fee.amount}}</td>
               <td>{{fee_record.fee.fee_name}}</td>
           </tr>

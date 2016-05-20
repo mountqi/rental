@@ -10,7 +10,7 @@ from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 
 from config import config
 
@@ -22,7 +22,10 @@ db = SQLAlchemy()
 # toolbar = DebugToolbarExtension()
 
 login_manager = LoginManager()
-login_manager.session_protection = 'strong'
+
+# Mountqi: 暂时把强保护关闭了
+# login_manager.session_protection = 'strong'
+login_manager.session_protection = 'basic'
 login_manager.login_view = "auth.login"
 
 

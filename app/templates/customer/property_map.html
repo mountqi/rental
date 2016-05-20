@@ -1,0 +1,296 @@
+{% extends "customer/customer_base.html" %}
+
+{% block head %}
+{{ super() }}
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+
+    <style type="text/css">
+        .info {
+            border: solid 1px silver;
+        }
+        div.info-top {
+            position: relative;
+            background: none repeat scroll 0 0 #F9F9F9;
+            border-bottom: 1px solid #CCC;
+            border-radius: 5px 5px 0 0;
+        }
+        div.info-top div {
+            display: inline-block;
+            color: #333333;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 31px;
+            padding: 0 10px;
+        }
+        div.info-top img {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            transition-duration: 0.25s;
+        }
+        div.info-top img:hover {
+            box-shadow: 0px 0px 5px #000;
+        }
+        div.info-middle {
+            font-size: 12px;
+            padding: 6px;
+            line-height: 20px;
+        }
+        div.info-bottom {
+            height: 0px;
+            width: 100%;
+            clear: both;
+            text-align: center;
+        }
+        div.info-bottom img {
+            position: relative;
+            z-index: 104;
+        }
+        span {
+            margin-left: 5px;
+            font-size: 11px;
+        }
+        .info-middle img {
+            float: left;
+            margin-right: 6px;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <div class="col-md-1 drop-item">
+        {{ g.district_form.district.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.district_form.district( class="drop_list") }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.area_form.area.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.area_form.area(class="drop_list") }}
+    </div>
+
+
+    <div class="col-md-1 drop-item">
+        {{ g.subway_form.subway.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.subway_form.subway(class="drop_list") }}
+    </div>
+
+
+    <div class="col-md-1 drop-item">
+         {{ g.owner_type_form.owner_type.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+         {{ g.owner_type_form.owner_type(class="drop_list") }}
+    </div>
+
+</div> <!-- the row class div -->
+
+<div class="row ">
+    <div class="col-md-1 drop-item" >
+        {{ g.estate_form.estate.label }}
+    </div>
+
+    <div class="col-md-1 drop-item" >
+        {{ g.estate_form.estate(class="drop_list") }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.layout_form.layout.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.layout_form.layout(class="drop_list") }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.square_form.square.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.square_form.square(class="drop_list") }}
+    </div>
+
+
+    <div class="col-md-1 drop-item">
+        {{ g.price_form.price.label }}
+    </div>
+
+    <div class="col-md-1 drop-item">
+        {{ g.price_form.price(class="drop_list") }}
+    </div>
+
+</div> <!-- the row class div -->
+
+<br/>
+
+<div id="map_container"></div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+
+  $(function() {
+    $("#city_selection").change(ajax_update_property_list)
+    $("#district_selection").change(ajax_update_property_list)
+    $("#estate_selection").change(ajax_update_property_list)
+    $("#area_selection").change(ajax_update_property_list)
+  });
+
+  function ajax_update_property_list() {
+        window.location = $(this).val()
+  }
+
+</script>
+
+<script type="text/javascript"
+            src="http://webapi.amap.com/maps?v=1.3&key=6979af2e3162302590858e7eae466df7"></script>
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+
+<script type="text/javascript">
+	//地图初始化时，在地图上添加一个marker标记,鼠标点击marker可弹出自定义的信息窗体
+
+	var testMarker10 = new Array();
+	testMarker10[0] = [121.448304,31.228632,511]
+
+	var testMarker11 = new Array();
+	testMarker11[0] = [121.258436,31.383352,21]	//嘉定区
+	testMarker11[1] = [121.123875,31.154515,46]	//青浦区
+	testMarker11[2] = [121.225411,31.031066,31]	//松江区
+	testMarker11[3] = [121.460367,30.912669,4]	//奉贤区
+	testMarker11[4] = [121.340989,30.724397,18]	//金山区
+	testMarker11[5] = [121.568909,31.246047,14]	//浦东新区
+	testMarker11[6] =[121.377011,31.111299,43]	//闵行区
+	testMarker11[7] =[121.393202,31.242124,21]	//普陀区
+	testMarker11[8] = [121.448304,31.228632,212]	 //市区
+
+	var testMarker12 = new Array();
+	testMarker12[0] = [121.542441,31.267939,65]	//杨浦区
+	testMarker12[1] = [121.493102,31.262404,176]	//虹口区
+	testMarker12[2] = [121.491507,31.223629,254]	//黄浦区
+	testMarker12[3]	= [121.448304,31.228632,65]	//静安区
+	testMarker12[4] =[121.421506,31.218165,54]	//长宁区
+	testMarker12[5] =[121.439349,31.182046,123]	//徐汇区
+	testMarker12[6] = [121.258436,31.383352,21]	//嘉定区
+	testMarker12[7] = [121.123875,31.154515,46]	//青浦区
+	testMarker12[8] = [121.225411,31.031066,31]	//松江区
+	testMarker12[9] = [121.460367,30.912669,4]	//奉贤区
+	testMarker12[10] = [121.340989,30.724397,18]	//金山区
+	testMarker12[11] = [121.568909,31.246047,14]	//浦东新区
+	testMarker12[12] =[121.377011,31.111299,43]	//闵行区
+	testMarker12[13] =[121.393202,31.242124,21]	//普陀区
+
+
+    var map = new AMap.Map("map_container", {
+        resizeEnable: true,
+        center: [121.393202,31.242124],
+        zoom: 10,
+		lang: 'zh_en'
+
+    });
+
+	setMarker(10);
+
+	map.on('zoomchange',function(){
+		map.clearMap();
+		var i = map.getZoom()
+		setMarker(i)
+	})
+
+
+	function setMarker(zoomlevel){
+		// 根据图层设定标记
+		// 使用测试标记
+		if(zoomlevel == 10)
+		{
+			var i = 0;
+			while(i < testMarker10.length)
+			{
+				pos = testMarker10[i];
+				i++;
+				var lng = pos[0]
+				var lat = pos[1]
+				var num = pos[2]
+				addMarker(lng,lat,num)
+			}
+		}
+		else if(zoomlevel == 12)
+		{
+			var i = 0;
+			while(i < testMarker12.length)
+			{
+				pos = testMarker12[i];
+				i++;
+				var lng = pos[0]
+				var lat = pos[1]
+				var num = pos[2]
+				addMarker(lng,lat,num)
+			}
+		}
+		else if(zoomlevel == 11)
+		{
+			var i = 0;
+			while(i < testMarker11.length)
+			{
+				pos = testMarker11[i];
+				i++;
+				var lng = pos[0]
+				var lat = pos[1]
+				var num = pos[2]
+				addMarker(lng,lat,num)
+			}
+		}
+	}
+
+    //添加marker标记
+    function addMarker(lng,lat,num) {
+
+		num = parseInt(num)
+		imageurl = 'http://webapi.amap.com/theme/v1.3/m4.png'
+		if(num < 50){
+			imageurl = 'http://webapi.amap.com/theme/v1.3/m1.png'
+			content = "<div style='width: 53px; height: 53px; text-align: center; line-height: 53px; color: rgb(0, 0, 0); font-size: 12px; cursor: pointer; background-image: url("+ imageurl +"); background-position: 0px 0px;'>"+num+"</div>"
+		}
+		else if (num < 100){
+			imageurl = 'http://webapi.amap.com/theme/v1.3/m2.png'
+			content = "<div style='width: 56px; height: 56px; text-align: center; line-height: 56px; color: rgb(0, 0, 0); font-size: 12px; cursor: pointer; background-image: url("+ imageurl +"); background-position: 0px 0px;'>"+num+"</div>"
+		}
+		else if(num < 150){
+			imageurl = 'http://webapi.amap.com/theme/v1.3/m3.png'
+			content = "<div style='width: 66px; height: 66px; text-align: center; line-height: 66px; color: rgb(0, 0, 0); font-size: 12px; cursor: pointer; background-image: url("+ imageurl +"); background-position: 0px 0px;'>"+num+"</div>"
+		}
+		else if(num < 200){
+			imageurl = 'http://webapi.amap.com/theme/v1.3/m4.png'
+			content = "<div style='width: 78px; height: 78px; text-align: center; line-height: 78px; color: rgb(0, 0, 0); font-size: 12px; cursor: pointer; background-image: url("+ imageurl +"); background-position: 0px 0px;'>"+num+"</div>"
+		}
+		else{
+			imageurl = 'http://webapi.amap.com/theme/v1.3/m5.png'
+			content = "<div style='width: 90px; height: 90px; text-align: center; line-height: 90px; color: rgb(0, 0, 0); font-size: 12px; cursor: pointer; background-image: url("+ imageurl +"); background-position: 0px 0px;'>"+num+"</div>"
+		}
+        var marker = new AMap.Marker({
+            map: map,
+            position: [lng,lat],
+			content: content
+        });
+    }
+
+</script>
+
+{% endblock %}

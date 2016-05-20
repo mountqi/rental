@@ -1,0 +1,103 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+
+        <!-- 展示用户缴费记录 users-->
+        <table class="table table-condensed">
+           <thead>
+              <tr >
+                 <th id="header-districts" order="{{g.order}}" >区县
+                     {%if g.order=="up" %}
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                     {%elif g.order=="down" %}
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                     {%else%}
+                        <span class="glyphicon glyphicon-sort"></span>
+                     {%endif%}
+                 </th>
+
+                 <th id="header-districts-id" order="{{g.id_order}}" >ID
+                     {%if g.id_order=="up" %}
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                     {%elif g.id_order=="down" %}
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                     {%else%}
+                        <span class="glyphicon glyphicon-sort"></span>
+                     {%endif%}
+                 </th>
+
+              </tr>
+
+
+           </thead>
+           <tbody>
+
+            {% for district in g.districts %}
+              <tr id="district-{{district.district_id}}">
+                  <td>{{district.district_name}}</td>
+                  <td>{{district.district_id}}</td>
+              </tr>
+            {% endfor %}
+
+           </tbody>
+        </table>
+
+
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+$(document).ready(function(){
+
+    $("#header-districts").click(function(){
+      console.log("districts header")
+
+        console.log($(this).attr("order"))
+      var params = {
+        order:$(this).attr("order"),
+        id_order:$("#header-districts-id").attr("order"),
+        sort:'districts'
+       };
+      var str = jQuery.param( params );
+        window.location="/experiment/show-districts?"+str;
+    });
+
+    $("#header-districts-id").click(function(){
+      console.log("districts header id")
+
+        console.log($(this).attr("order"))
+      var params = {
+        id_order:$(this).attr("order"),
+        order:$("#header-districts").attr("order"),
+        sort:'districts-id'
+       };
+      var str = jQuery.param( params );
+        window.location="/experiment/show-districts?"+str;
+    });
+
+
+
+});
+
+
+
+</script>
+
+{% endblock %}

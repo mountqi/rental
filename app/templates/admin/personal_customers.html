@@ -1,5 +1,5 @@
 {% extends "admin/admin_base.html" %}
-{% import "admin/_macro_page.html" as macro_page %}
+{% import "_macro_page.html" as macro_page %}
 
 {% block page_content %}
 {{ super() }}
@@ -19,8 +19,8 @@
              <th>账号</th>
              <th>姓名</th>
              <th>创建日</th>
-             <th>截止日</th>
              <th>状态</th>
+             <th></th>
           </tr>
        </thead>
        <tbody>
@@ -34,8 +34,12 @@
              </td>
              <td>{{check_empty(user.name)}}</td>
              <td>{{date_format(user.create_time)}}</td>
-             <td>{{date_format(user.expire_time)}}</td>
              <td>{{user.get_active_state_str()}}</td>
+             <td>
+                <a {%if not user.is_valid()%}class="invalid_user_link"{%endif%} href="{{ url_for('admin.charge_fee',customer_id=user.user_id) }}">
+                缴费
+                </a>
+             </td>
           </tr>
         {% endfor %}
 

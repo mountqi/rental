@@ -1,0 +1,28 @@
+
+#search-form-area {
+    padding-top:10px;
+}
+
+#customer_pop {
+    padding-top:10px;
+    float:left;
+}
+
+.drop_list
+{
+    width:90px;
+}
+
+label {
+    width:90px;
+    text-align:right;
+}
+
+#propery-table {
+    padding-left:10px;
+    padding-right:10px;
+}
+
+#map_container{
+    height:600px;
+}

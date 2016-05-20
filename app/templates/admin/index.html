@@ -30,7 +30,7 @@
     {% endif %}
 
     {% if Permission.is_admin_house_management(current_user.role.permissions) %}
-    <a href="{{ url_for('admin.undone') }}">
+    <a href="{{ url_for('admin.properties') }}">
     <div class="col-md-3">
         <h1>房源维护</h1>
         <br/>
@@ -53,7 +53,9 @@
     </a>
     {% endif %}
 
+
 </div> <!-- the row class div -->
+
 
 {% endblock %}
 

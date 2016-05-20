@@ -1,0 +1,60 @@
+{% extends "customer/customer_base.html" %}
+
+
+{% block page_content %}
+{{ super() }}
+
+<div class="row ">
+
+    <!--<div class="col-md-8">-->
+        <!--{{ g.district_form.district.label }} &nbsp; {{ g.district_form.district() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--{{ g.area_form.area.label }} &nbsp; {{ g.area_form.area() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--{{ g.subway_form.subway.label }} &nbsp; {{ g.subway_form.subway() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--{{ g.owner_type_form.owner_type.label }} &nbsp; {{ g.owner_type_form.owner_type() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+    <!--</div>-->
+    <!--<div class="col-md-8">-->
+        <!--{{ g.estate_form.estate.label }} &nbsp; {{ g.estate_form.estate() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--{{ g.layout_form.layout.label }} &nbsp; {{ g.layout_form.layout() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--{{ g.square_form.square.label }} &nbsp; {{ g.square_form.square() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--{{ g.price_form.price.label }} &nbsp; {{ g.price_form.price() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
+    <!--</div>-->
+
+    <div class="col-md-2 drop-item">
+        {{ g.district_form.district.label }} &nbsp; {{ g.district_form.district( class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+    <div class="col-md-2 drop-item">
+        {{ g.area_form.area.label }} &nbsp; {{ g.area_form.area(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+    <div class="col-md-2 drop-item">
+        {{ g.subway_form.subway.label }} &nbsp; {{ g.subway_form.subway(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+    <div class="col-md-3 drop-item">
+         {{ g.owner_type_form.owner_type.label }} &nbsp; {{ g.owner_type_form.owner_type(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+</div> <!-- the row class div -->
+
+<div class="row ">
+    <div class="col-md-2 drop-item" >
+        {{ g.estate_form.estate.label }} &nbsp; {{ g.estate_form.estate(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+    <div class="col-md-2 drop-item">
+        {{ g.layout_form.layout.label }} &nbsp; {{ g.layout_form.layout(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+    <div class="col-md-2 drop-item">
+        {{ g.square_form.square.label }} &nbsp; {{ g.square_form.square(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+    <div class="col-md-3 drop-item">
+        {{ g.price_form.price.label }} &nbsp; {{ g.price_form.price(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+
+</div> <!-- the row class div -->
+
+
+{% endblock %}

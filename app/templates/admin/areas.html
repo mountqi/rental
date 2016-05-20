@@ -1,0 +1,68 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+
+    {%if city%}
+    <a href="{{ url_for('admin.add_area', city_id=city_id) }}">
+    <button type="button" class="btn btn-primary">添加区域</button>
+    </a>
+    {%endif%}
+    <br/>
+    <br/>
+
+    {{ wtf.quick_form(city_form) }}
+
+    {%if all_areas and len(all_areas)>0 %}
+    <!-- 展示区域列表 users-->
+    <table class="table table-condensed">
+       <thead>
+          <tr>
+             <th>区域</th>
+             <th></th>
+          </tr>
+       </thead>
+       <tbody>
+
+        {% for area in all_areas %}
+          <tr>
+             <td>
+                 {{area.area_name}}
+             </td>
+             <td>
+                删除
+             </td>
+          </tr>
+        {% endfor %}
+
+       </tbody>
+    </table>
+    {%else%}
+        <p>区域还没有添加</p>
+    {%endif%}
+
+
+</div> <!-- the row class div -->
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script>
+
+  $(function() {
+    $("#city_selection").change(ajax_update_districts)
+  });
+
+  function ajax_update_districts() {
+        window.location = $("#city_selection").val();
+  }
+
+</script>
+
+{% endblock %}
