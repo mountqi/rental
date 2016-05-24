@@ -1,0 +1,20 @@
+
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<div class="row ">
+
+    <a href="{{ url_for('experiment.send_mail1') }}">
+    <button type="button" class="btn btn-primary">发送邮件</button>
+    </a>
+    <br/>
+    <br/>
+
+
+</div> <!-- the row class div -->
+
+{% endblock %}
+

@@ -1,0 +1,71 @@
+{% extends "auth/auth_base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+    <br/>
+    <br/>
+
+    <div class="row ">
+        <div class="col-md-6 col-md-offset-3" >
+
+        {%if len(get_flashed_messages())>0 %}
+            <br/>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {%else%}
+        <br/>
+        <br/>
+        {%endif%}
+        </div>
+    </div> <!-- the row class div -->
+
+    <div class="row ">
+
+        <div class="col-md-6 col-md-offset-3" >
+           <p id="title-note">{{g.title_note}}</p>
+        </div>
+
+    </div> <!-- the row class div -->
+    <br/>
+    <div class="row ">
+
+        <div class="col-md-6 col-md-offset-3" >
+           <div class="jumbotron login-jb-bg">
+
+                <form method="POST" class="form" role="form">
+                    {{ g.form.csrf_token }}
+                    <div class="form-group {%if g.form.email.errors %}has-error{%endif%}">
+                        {{g.form.email(class='form-control', placeholder="请填写您的邮箱")}}
+                    {%- if not g.form.email.errors %}
+                        <p>&nbsp;</p>
+                    {%- else %}
+                          {%- for error in g.form.email.errors %}
+                              <p class="help-block">{{error}}</p>
+                          {%- endfor %}
+                    {%- endif %}
+                    </div>
+
+                    {{g.form.submit(class='form-control',id="find-passwd-btn" )}}
+                </form>
+           </div>
+        </div>
+
+    </div> <!-- the row class div -->
+
+    <div class="row ">
+
+        <div class="col-md-6 col-md-offset-3" >
+           <div class="jumbotron login-jb-bg">
+
+              <p>{{g.second_note|safe}}</p>
+           </div>
+        </div>
+
+    </div> <!-- the row class div -->
+
+{% endblock %}
+

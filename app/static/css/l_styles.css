@@ -1,0 +1,230 @@
+
+html {
+    overflow: auto;
+}
+@media screen and (min-width: 974px) {
+    html {
+        overflow: hidden;
+    }
+}
+@media screen and (min-height: 510px) {
+    html {
+        overflow: hidden;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    body {
+        background: transparent url("/static/image/login_bg2.jpg") no-repeat fixed center bottom;
+    }
+}
+@media screen and (min-width: 761px) and (max-width: 1023px) {
+    body {
+        background: transparent url("/static/image/login_bg2.jpg") no-repeat fixed center bottom;
+    }
+}
+@media screen and (min-width: 1024px) {
+    body {
+        background: transparent url("/static/image/login_bg2.jpg") no-repeat fixed center bottom;
+    }
+}
+
+@media screen {
+    body {
+        background-size: cover;
+    }
+}
+
+.logo_text {
+    width:100%;
+    text-align:center;
+    color:rgb(255,255,255);
+    font-weight:bold;
+}
+
+.logo_div {
+    width:100%;
+    text-align:center;
+}
+
+.aligncenter {
+    clear: both;
+    display: block;
+    margin:auto;
+}
+
+#left_bracket {
+    width: 20%;
+    height: 100%;
+    border-top-style:solid;
+    border-bottom-style:solid;
+    border-left-style:solid;
+    border-width:2px;
+    float:left;
+    border-color:rgb(255,255,255);
+}
+
+#middle_bracket {
+    width: 60%;
+    height: 100%;
+    border-bottom-style:solid;
+    border-width:2px;
+    float:left;
+    border-color:rgb(255,255,255);
+}
+
+#right_bracket {
+    width: 20%;
+    height: 100%;
+    border-top-style:solid;
+    border-bottom-style:solid;
+    border-right-style:solid;
+    border-width:2px;
+    float:left;
+    border-color:rgb(255,255,255);
+}
+
+#login_div {
+    padding-top:30px;
+    padding-left:80px;
+    padding-right:80px;
+    height: 270px;
+}
+
+#login_div p#title {
+    color:white;
+    width:100%;
+    text-align:center;
+    font-size:20px;
+    position:relative;
+    top:-15px;
+    letter-spacing:5px;
+    font-weight:bold;
+}
+
+.sub-login {
+    color:white;
+    width:33%;
+    float:left;
+}
+
+.help-block {
+    rgb(228,108,10);
+}
+
+
+.sub-login p {
+    text-align:center;
+}
+
+.sub-login .lower-line {
+    position:relative;
+    top:-15px;
+}
+
+.sub-login a {
+    color:white;
+}
+
+#link-left {
+    padding-left:50px;
+}
+
+#link-right {
+    padding-right:50px;
+}
+
+#submit-btn {
+    font-weight:bold;
+    font-size:120%;
+    color:white;
+    background-color:rgb(228,108,10);
+}
+
+#contact-img {
+    padding-bottom:20px;
+    width:100%
+}
+
+#contact-note {
+    text-align:center;
+    color:white;
+}
+
+.login-jb-bg {
+   background: rgb(127, 127, 127); /* This is for ie8 and below */
+   background: rgba(255, 255, 255, 0.4);
+}
+
+.login-jb-bg p {
+   color:white;
+   font-size:80%;
+}
+
+#title-note {
+    color:white;
+    font-weight:bold;
+    font-size:120%;
+}
+
+#find-passwd-btn {
+    color:white;
+    background-color:rgb(228,108,10);
+}
+
+.form-group p.help-block {
+    color:yellow;
+}
+
+/*-----------------------  register * ---------------*/
+
+.reg-title-bar {
+    float:left;
+}
+
+.reg-title-bar p {
+    text-align:center;
+}
+
+.reg-title-bar .lower-line {
+    position:relative;
+    top:-15px;
+    font-size:80%;
+}
+
+.reg-title-bar a {
+    color:white;
+}
+
+#icon-img {
+    width:70px;
+    position:relative;
+    top:-8px;
+}
+
+.reg-guide-title {
+    text-align:center;
+    color:white;
+}
+
+.reg-guide-title.inactive {
+    color:rgb(200,200,200);
+}
+
+.header-row {
+    border-bottom-style:solid;
+    padding-bottom:10px;
+    border-width:1px;
+    border-color:white;
+}
+
+.jumbotron.jumbotron-reg {
+    height:700px;
+    padding-top:12px;
+}
+
+.notice {
+    color:white;
+    font-weight:bold;
+    font-size:120%;
+}

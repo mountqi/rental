@@ -13,6 +13,9 @@ from ..models_property import District
 from .forms import LoginForm, DateForm, AddEstateForm
 from . import experiment
 
+from ..email import send_email, send_async_email
+
+
 
 tab_menu = [
     ("个人用户","admin.personal_customers",False),
@@ -84,6 +87,15 @@ def gui():
     return render_template('/experiment/gui.html')
 
 
+@experiment.route('/experiment/login', methods=['GET'])
+def login():
+    """
+    """
+    g.form = LoginForm()
+    return render_template('/experiment/login1.html')
+
+
+
 def rotate_order(order):
     if order == 'no':
         return "up"
@@ -125,3 +137,21 @@ def show_districts():
 
     return render_template('/experiment/show_districts.html')
 
+
+@experiment.route('/experiment/send-mail', methods=['GET'])
+def send_mail():
+    """
+    """
+    return render_template('/experiment/test_mail.html')
+
+
+@experiment.route('/experiment/send-mail1', methods=['GET'])
+def send_mail1():
+    """
+    """
+    to_addr = "mountqi@126.com"
+    subject = "test mail sending"
+    template = "mail/confirm"
+    send_email(to_addr, subject, template)
+
+    return redirect(url_for('experiment.send_mail'))

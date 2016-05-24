@@ -38,7 +38,8 @@ class ChangeUserPasswordForm(Form):
     password = PasswordField('请输入新密码', validators=[
         ServerRequired('新密码不能为空'), EqualTo('password2', message='新密码两次输入必须相同'),
         Length(8, 32, "长度8-32字符")])
-    password2 = PasswordField('请再次输入新密码', validators=[ServerRequired('新密码不能为空')])
+    password2 = PasswordField('请再次输入新密码', validators=[ServerRequired('新密码不能为空'),
+                                                      EqualTo('password', message='新密码两次输入必须相同')])
     submit = SubmitField('更改密码')
 
 

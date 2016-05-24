@@ -1,0 +1,15 @@
+{% macro render(field,placeholder="") %}
+
+     <div class="form-group {%if field.errors %}has-error{%endif%}">
+         {{field(class='form-control', placeholder=placeholder)}}
+     {%- if not field.errors %}
+         <p>&nbsp;</p>
+     {%- else %}
+           <!--{%- for error in field.errors %}-->
+               <!--<p class="help-block">{{error}}</p>-->
+           <!--{%- endfor %}-->
+         <p class="help-block">{{field.errors[0]}}</p>
+     {%- endif %}
+     </div>
+
+{% endmacro %}

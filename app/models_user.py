@@ -198,6 +198,17 @@ class UserType:
     COPR_CUSTOMER = 3
     CORP_SUB_ACCOUNT = 4
 
+# 管理员审核批准直接转换到active
+class AccountState:
+    INACTIVE = 0
+    ACTIVE =1
+
+
+class RegisterState:
+    DE_REGISTERED = 0 # 注册状态清空
+    REGISTERED = 1  # 用户已经注册，但是还没有通过验证
+    VERIFIED = 2  # 用户已经通过验证，但是还没有审核通过
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -212,6 +223,7 @@ class User(UserMixin, db.Model):
     create_time = db.Column(db.DateTime(), default=datetime.now)
     user_type = db.Column(db.Integer)
     is_active = db.Column(db.Boolean,default=True) # 这个只对后台管理员有效吧，前端用户看缴费时段
+    register_state = db.Column(db.Integer, default=RegisterState.DE_REGISTERED)
     agency_id = db.Column(db.Integer, db.ForeignKey('agencies.agency_id'))
     remark = db.Column(db.String(256))
 
@@ -284,6 +296,39 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.login_name
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.user_id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') != self.user_id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
+
+    def generate_reset_token(self, expiration=24*3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.user_id})
+
+    def reset_password(self, token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('reset') != self.user_id:
+            return False
+        self.password = new_password
+        db.session.add(self)
+        print("reset is done")
+        return True
 
 
 class Agency(db.Model):

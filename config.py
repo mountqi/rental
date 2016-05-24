@@ -8,14 +8,17 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    MAIL_SERVER = 'smtp.googlemail.com'
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+
+    MAIL_SERVER = 'smtp.126.com'
+    MAIL_PORT = 25
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = "dm_inf"
+    MAIL_PASSWORD = "dmmqCert130"
+    FLASKY_MAIL_SUBJECT_PREFIX = '[DM] '
+    FLASKY_MAIL_SENDER = 'DM Admin <dm_inf@126.com>'
+    FLASKY_ADMIN = "dm_inf@126.com"
+
     FLASKY_SLOW_DB_QUERY_TIME=0.5
     # BOOTSTRAP_SERVE_LOCAL = True
     # BOOTSTRAP_QUERYSTRING_REVVING = False

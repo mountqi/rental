@@ -1,0 +1,7 @@
+亲爱的城市动脉用户，
+
+请点击以下链接，重置您的密码。
+
+<a href="{{url_for('auth.passwd_reset',token=token, _external=True)}}">
+    {{url_for('auth.passwd_reset',token=token, _external=True)}}
+</a>

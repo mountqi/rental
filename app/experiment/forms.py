@@ -17,8 +17,6 @@ from ..models_property import City, District, Area, Estate, PropertyType
 class LoginForm(Form):
     login_name = StringField('账号', validators=[Required('请输入账号'), Length(1, 64)])
     password = PasswordField('密码', validators=[Required('请输入密码')])
-    start_time = DateField('起始时间',id="datepicker")
-    remember_me = BooleanField('保持登录')
     submit = SubmitField('登录')
 
 
