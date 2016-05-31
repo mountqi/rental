@@ -17,6 +17,8 @@ html {
     body {
         background: transparent url("/static/image/login_bg2.jpg") no-repeat fixed center bottom;
     }
+
+
 }
 @media screen and (min-width: 761px) and (max-width: 1023px) {
     body {
@@ -88,7 +90,7 @@ html {
     padding-top:30px;
     padding-left:80px;
     padding-right:80px;
-    height: 270px;
+    height: 260px;
 }
 
 #login_div p#title {
@@ -102,16 +104,14 @@ html {
     font-weight:bold;
 }
 
+#sub-login-row {
+    margin-top:10px;
+}
 .sub-login {
     color:white;
     width:33%;
     float:left;
 }
-
-.help-block {
-    rgb(228,108,10);
-}
-
 
 .sub-login p {
     text-align:center;
@@ -149,6 +149,7 @@ html {
 #contact-note {
     text-align:center;
     color:white;
+    font-size:80%;
 }
 
 .login-jb-bg {
@@ -172,8 +173,12 @@ html {
     background-color:rgb(228,108,10);
 }
 
-.form-group p.help-block {
+p.help-block1 {
     color:yellow;
+    padding-top:2px;
+    padding-bottom:0px;
+    font-size:80%;
+    height:10px;
 }
 
 /*-----------------------  register * ---------------*/
@@ -219,12 +224,27 @@ html {
 }
 
 .jumbotron.jumbotron-reg {
-    height:700px;
     padding-top:12px;
+    padding-bottom:20px;
+}
+
+#contact-jb {
+    padding-bottom:15px;
 }
 
 .notice {
     color:white;
     font-weight:bold;
     font-size:120%;
+}
+
+.navbar {
+   color:white;
+   background: rgb(127, 127, 127); /* This is for ie8 and below */
+   background: rgba(255, 255, 255, 0.4);
+   border-style:none;
+}
+
+#contact-row {
+    margin-top:20px;
 }

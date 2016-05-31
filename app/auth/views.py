@@ -10,7 +10,7 @@ from .forms import LoginForm, FindPasswdForm, RegisterPersonalCustomerForm, Regi
     PasswordResetForm
 from . import auth
 from ..email import send_email
-
+from ..utils import strip
 
 """
 def is_paid_customer(customer):
@@ -39,8 +39,8 @@ def is_paid_customer(customer):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(login_name=form.login_name.data).first()
-        if user is not None and user.verify_password(form.password.data):
+        user = User.query.filter_by(login_name=strip(form.login_name.data)).first()
+        if user is not None and user.verify_password(strip(form.password.data)):
             if user.user_type is UserType.BACKEND_ADMIN and not user.is_valid():
                 flash('账户已经停用')
                 return render_template('auth/login.html', form=form)
@@ -65,8 +65,8 @@ def login():
 def login_old():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(login_name=form.login_name.data).first()
-        if user is not None and user.verify_password(form.password.data):
+        user = User.query.filter_by(login_name=strip(form.login_name.data)).first()
+        if user is not None and user.verify_password(strip(form.password.data)):
             if user.user_type is UserType.BACKEND_ADMIN and not user.is_valid():
                 flash('账户已经停用')
                 return render_template('auth/login.html', form=form)
@@ -101,7 +101,7 @@ def find_passwd():
     g.form = FindPasswdForm()
     if g.form.validate_on_submit():
         # 在数据库里面搜索，如果不存在这样的地址，则说明出错
-        user = User.query.filter_by( email=g.form.email.data ).first()
+        user = User.query.filter_by( email=strip(g.form.email.data) ).first()
         if not user:
             flash('邮箱不正确，请重新填写')
         else:
@@ -112,9 +112,8 @@ def find_passwd():
             else:
                 g.token = user.generate_reset_token()
                 g.user = user
-                send_email( g.form.email.data, "重置密码", "mail/reset_passwd", token=g.token )
-                return \
-                    rect(url_for('auth.passwd_reset_note'))
+                send_email( strip(g.form.email.data), "重置密码", "mail/reset_passwd", token=g.token )
+                return redirect(url_for('auth.passwd_reset_note'))
 
     g.title_note = "通过两种方式可以找回您的密码"
     g.second_note = "个人用户请携带您注册时用的身份证到我公司重置密码<br/><br/>" + \
@@ -128,8 +127,6 @@ def passwd_reset_note():
     g.note = "亲爱的用户，<br/><br/>" + \
         "重置密码的链接已经发到您注册时填写的邮箱，请1分钟后查收邮件。"
 
-    # g.reset_link = url_for('auth.passwd_reset')
-
     return render_template('auth/passwd_reset_note.html')
 
 
@@ -140,10 +137,10 @@ def passwd_reset(token):
 
     g.form = PasswordResetForm()
     if g.form.validate_on_submit():
-        user = User.query.filter_by(email=g.form.email.data).first()
+        user = User.query.filter_by(email=strip(g.form.email.data)).first()
         if user is None:
             return redirect(url_for('auth.login'))
-        if user.reset_password(token, g.form.password.data):
+        if user.reset_password(token, strip(g.form.password.data)):
             flash('密码重置成功')
             return redirect(url_for('auth.login'))
         else:
@@ -164,11 +161,11 @@ def register_personal_customer():
     g.form = RegisterPersonalCustomerForm()
     if g.form.validate_on_submit():
         user = User()
-        user.login_name = g.form.login_name.data
-        user.name = g.form.name.data
-        user.password = str(g.form.password.data).strip()
-        user.phone_no = g.form.login_name.data
-        user.email = g.form.email.data
+        user.login_name = strip(g.form.login_name.data)
+        user.name = strip(g.form.name.data)
+        user.password = strip(g.form.password.data)
+        user.phone_no = strip(g.form.login_name.data)
+        user.email = strip(g.form.email.data)
         role_group = RoleGroup.query.filter_by(name="个人用户组").one()
         user.role_id = role_group.role_id
         user.is_active = False
@@ -191,8 +188,8 @@ def register_corp_customer():
     g.form = RegisterCorpCustomerForm()
 
     if g.form.validate_on_submit():
-        same_agency1 = Agency.query.filter_by(corp_name=g.form.corp_name.data).first()
-        license_no = str(g.form.corp_license_no.data).strip()
+        same_agency1 = Agency.query.filter_by(corp_name=strip(g.form.corp_name.data)).first()
+        license_no = strip(g.form.corp_license_no.data)
         same_agency2 = None
         if license_no != "":
             same_agency2 = Agency.query.filter_by(corp_license_no=license_no).first()
@@ -201,17 +198,17 @@ def register_corp_customer():
             flash('同名公司已经存在，不能添加', "error")
         else:
             agency = Agency()
-            agency.corp_name = g.form.corp_name.data
-            agency.corp_license_no = g.form.corp_license_no.data
+            agency.corp_name = strip(g.form.corp_name.data)
+            agency.corp_license_no = strip(g.form.corp_license_no.data)
             agency.sub_account_no = 3
             db.session.add(agency)
 
             user = User()
-            user.login_name = g.form.login_name.data
-            user.password = str(g.form.password.data).strip()
-            user.name = g.form.name.data
-            user.phone_no = g.form.login_name.data
-            user.email = g.form.email.data
+            user.login_name = strip(g.form.login_name.data)
+            user.password = strip(g.form.password.data)
+            user.name = strip(g.form.name.data)
+            user.phone_no = strip(g.form.login_name.data)
+            user.email = strip(g.form.email.data)
             role_group = RoleGroup.query.filter_by(name="公司用户组").one()
             user.role_id = role_group.role_id
             user.is_active = False

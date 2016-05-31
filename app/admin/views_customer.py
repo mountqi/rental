@@ -18,7 +18,7 @@ from .. import db, check_empty
 from ..models_user import User, UserType, Agency, Fee, FeeRecord, RoleGroup, TimeLengthType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
 from ..decorators import permission_required
-
+from ..utils import strip
 
 @admin.route('/admin/personal-customers',methods=['GET'])
 @login_required
@@ -45,12 +45,12 @@ def add_personal_user():
     form = AddPersonalUserForm()
     if form.validate_on_submit():
         user = User()
-        user.login_name = form.login_name.data
-        user.name = form.name.data
-        user.password = str(form.password.data).strip()
-        user.phone_no = form.phone_no.data
-        user.email = form.email.data
-        user.remark = form.remark.data
+        user.login_name = strip(form.login_name.data)
+        user.name = strip(form.name.data)
+        user.password = strip(form.password.data)
+        user.phone_no = strip(form.phone_no.data)
+        user.email = strip(form.email.data)
+        user.remark = strip(form.remark.data)
         role_group = RoleGroup.query.filter_by(name="个人用户组").one()
         user.role_id = role_group.role_id
         user.is_active = False
@@ -79,11 +79,11 @@ def mod_personal_user(user_id):
     form = ModifyPersonalUserForm()
     user = User.query.filter_by(user_id=user_id).one()
     if form.validate_on_submit():
-        user.login_name = form.login_name.data
-        user.name = form.name.data
-        user.phone_no = form.phone_no.data
-        user.email = form.email.data
-        user.remark = form.remark.data
+        user.login_name = strip(form.login_name.data)
+        user.name = strip(form.name.data)
+        user.phone_no = strip(form.phone_no.data)
+        user.email = strip(form.email.data)
+        user.remark = strip(form.remark.data)
         # ??? active 状态应该是根据缴费来定的
         # user.is_active = form.status.data
         db.session.add(user)
@@ -110,7 +110,7 @@ def new_passwd(user_id):
     form = ChangeUserPasswordForm()
     user = User.query.filter_by(user_id=user_id).one()
     if form.validate_on_submit():
-        user.password = form.password.data
+        user.password = strip(form.password.data)
         db.session.add(user)
         flash('用户的密码已经更新')
         return redirect(request.args.get('next') or url_for('admin.personal_customers'))
@@ -158,20 +158,19 @@ def add_corp_customer():
             flash('同名公司已经存在，不能添加', "error")
         else:
             agency = Agency()
-            agency.corp_name = form.corp_name.data
-            agency.corp_license_no = form.corp_license_no.data
-            # agency.is_active = False
+            agency.corp_name = strip(form.corp_name.data)
+            agency.corp_license_no = strip(form.corp_license_no.data)
             agency.sub_account_no = form.sub_account_no.data
             db.session.add(agency)
 
             user = User()
-            user.login_name = form.login_name.data
-            user.password = str(form.password.data).strip()
-            user.name = form.name.data
-            # user.id_card_no = form.id_card_no.data
-            user.phone_no = form.phone_no.data
-            user.email = form.email.data
-            user.remark = form.remark.data
+            user.login_name = strip(form.login_name.data)
+            user.password = strip(form.password.data)
+            user.name = strip(form.name.data)
+            user.id_card_no = strip(form.id_card_no.data)
+            user.phone_no = strip(form.phone_no.data)
+            user.email = strip(form.email.data)
+            user.remark = strip(form.remark.data)
             role_group = RoleGroup.query.filter_by(name="公司用户组").one()
             user.role_id = role_group.role_id
             user.is_active = False
@@ -200,17 +199,17 @@ def mod_corp_customer(user_id):
     user = User.query.filter_by(user_id=user_id).one()
     agency = user.agency
     if form.validate_on_submit():
-        agency.corp_name = form.corp_name.data
-        agency.corp_license_no = form.corp_license_no.data
-        agency.sub_account_no = int(form.sub_account_no.data)
+        agency.corp_name = strip(form.corp_name.data)
+        agency.corp_license_no = strip(form.corp_license_no.data)
+        agency.sub_account_no = form.sub_account_no.data
         db.session.add(agency)
 
-        user.login_name = form.login_name.data
-        user.name = form.name.data
-        # user.id_card_no = form.id_card_no.data
-        user.phone_no = form.phone_no.data
-        user.email = form.email.data
-        user.remark = form.remark.data
+        user.login_name = strip(form.login_name.data)
+        user.name = strip(form.name.data)
+        # user.id_card_no = strip(form.id_card_no.data)
+        user.phone_no = strip(form.phone_no.data)
+        user.email = strip(form.email.data)
+        user.remark = strip(form.remark.data)
         db.session.add(user)
 
         try:
@@ -402,7 +401,7 @@ def add_fee_standard():
     form = AddFeeStandardForm()
     if form.validate_on_submit():
         fee = Fee()
-        fee.fee_name = form.fee_name.data
+        fee.fee_name = strip(form.fee_name.data)
         fee.amount = form.amount.data
         fee.time_length = form.time_length.data
         fee.time_length_type = form.time_length_type.data

@@ -156,9 +156,9 @@ class ShowCityListForAdminPropertyForm(Form):
         area_id = kwargs['area_id']
         source = kwargs['source']
         url = kwargs['url']
-        self.city.choices = [(create_admin_property_url( url, city.city_id,district_id,estate_id, area_id,source), city.city_name)
+        self.city.choices = [(city.city_id, city.city_name)
                              for city in City.query.all()]
-        self.city.data = create_admin_property_url( url, city_id, district_id, estate_id, area_id, source )
+        self.city.data = city_id
 
 
 class ShowDistrictListForAdminPropertyForm(Form):
@@ -168,18 +168,14 @@ class ShowDistrictListForAdminPropertyForm(Form):
         super(ShowDistrictListForAdminPropertyForm, self).__init__(*args, **kwargs)
         city_id = kwargs['city_id']
         district_id = kwargs['district_id']
-        estate_id = kwargs['estate_id']
-        area_id = kwargs['area_id']
-        source = kwargs['source']
-        url = kwargs['url']
-        self.district.choices = [(create_admin_property_url(url, city_id,district.district_id, estate_id, area_id,source), district.district_name)
+        self.district.choices = [ (district.district_id, district.district_name)
                              for district in District.query.filter_by(city_id=city_id).all()]
-        item_all = (create_admin_property_url( url, city_id, 0, estate_id, area_id, source ),"--所有--")
+        item_all = ( 0,"--所有--")
         self.district.choices.insert(0,item_all)
         if district_id==0:
             self.district.data = item_all[0]
         else:
-            self.district.data = create_admin_property_url( url, city_id, district_id, estate_id, area_id, source )
+            self.district.data = str(district_id)
 
 
 class ShowEstateListForAdminPropertyForm(Form):
@@ -187,20 +183,16 @@ class ShowEstateListForAdminPropertyForm(Form):
 
     def __init__(self, *args, **kwargs):
         super(ShowEstateListForAdminPropertyForm, self).__init__(*args, **kwargs)
-        city_id = kwargs['city_id']
         district_id = kwargs['district_id']
         estate_id = kwargs['estate_id']
-        area_id = kwargs['area_id']
-        source = kwargs['source']
-        url = kwargs['url']
-        self.estate.choices = [(create_admin_property_url(url, city_id,district_id,estate.estate_id, area_id,source), estate.estate_name)
+        self.estate.choices = [( estate.estate_id, estate.estate_name)
                              for estate in Estate.query.filter_by(district_id=district_id).all()]
-        item_all = (create_admin_property_url( url, city_id, district_id, 0, area_id, source ),"--所有--")
+        item_all = ( district_id, "--所有--")
         self.estate.choices.insert(0,item_all)
         if district_id==0:
             self.estate.data = item_all[0]
         else:
-            self.estate.data = create_admin_property_url( url, city_id, district_id,estate_id, area_id, source )
+            self.estate.data = str(estate_id)
 
 
 class ShowAreaListForAdminPropertyForm(Form):
@@ -209,20 +201,16 @@ class ShowAreaListForAdminPropertyForm(Form):
     def __init__(self, *args, **kwargs):
         super(ShowAreaListForAdminPropertyForm, self).__init__(*args, **kwargs)
         city_id = kwargs['city_id']
-        district_id = kwargs['district_id']
-        estate_id = kwargs['estate_id']
         area_id = kwargs['area_id']
-        source = kwargs['source']
-        url = kwargs['url']
-        self.area.choices = [(create_admin_property_url( url, city_id, district_id, estate_id, area.area_id, source), area.area_name)
+        self.area.choices = [( area.area_id, area.area_name)
                              for area in Area.query.filter_by(city_id=city_id).all()]
 
-        item_all = (create_admin_property_url(url, city_id, district_id, estate_id, 0, source), "--所有--")
+        item_all = (0, "--所有--")
         self.area.choices.insert(0, item_all)
         if area_id == 0:
             self.area.data = item_all[0]
         else:
-            self.area.data = create_admin_property_url(url, city_id, district_id, estate_id, area_id, source)
+            self.area.data = str(area_id)
 
 
 class ShowSourceListForAdminPropertyForm(Form):
@@ -230,21 +218,16 @@ class ShowSourceListForAdminPropertyForm(Form):
 
     def __init__(self, *args, **kwargs):
         super(ShowSourceListForAdminPropertyForm, self).__init__(*args, **kwargs)
-        city_id = kwargs['city_id']
-        district_id = kwargs['district_id']
-        estate_id = kwargs['estate_id']
-        area_id = kwargs['area_id']
         source = kwargs['source']
-        url = kwargs['url']
-        self.source.choices = [(create_admin_property_url(url, city_id, district_id, estate_id, area_id, s.source_name), s.source_name)
+        self.source.choices = [( s.source_name, s.source_name)
                              for s in PropertySource.query.all()]
 
-        item_all = (create_admin_property_url(url, city_id, district_id, estate_id, area_id, ""), "--所有--")
+        item_all = ("", "--所有--")
         self.source.choices.insert(0, item_all)
         if source == "":
             self.source.data = item_all[0]
         else:
-            self.source.data = create_admin_property_url(url, city_id, district_id, estate_id, area_id, source)
+            self.source.data = str(source)
 
 
 class AddPropertyForm(Form):
@@ -267,7 +250,7 @@ class AddPropertyForm(Form):
     contact_name = StringField('联系人', validators=[Optional(),Length(1, 16, "长度1-16")])
     contact_tel = StringField('联系电话', validators=[Optional(),Length(1, 32, "长度1-32")])
     status = SelectField('租房状态')
-    furniture = StringField('家具电器', validators=[Optional(),Length(1, 64, "长度1-64")])
+    inclusion = StringField('家具电器、发票、生活娱乐设施', validators=[Optional(),Length(1, 64, "长度1-64")])
     description = TextAreaField('说明', validators=[Optional(),Length(1, 256, "长度1-256")])
     valid_time = DateField('起租日期', id="valid-time", format='%Y-%m-%d', validators=[Optional()])
     trust_grade = IntegerField('可信度', validators=[Optional()])
@@ -315,11 +298,15 @@ class AddPropertyForm(Form):
 
 
         # 租房状态
-        status_list = ["可租","已租","未知"]
+        status_list = ["可租", "已租", "预定", "未知"]
         self.status.choices = [(s, s) for s in status_list]
 
         # 房屋来源
         self.source.choices = [ (s.source_name,s.source_name) for s in PropertySource.query.all()]
+
+
+
+
 
 
 # ---------- Follow --------------------------

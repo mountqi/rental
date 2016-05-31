@@ -16,7 +16,7 @@ from .. import db, check_empty
 from ..models_user import User, RoleGroup, UserType, Permission
 from .menu_factory import get_nav_menu, get_tab_menu
 from ..decorators import permission_required
-
+from ..utils import strip
 
 @admin.route('/')
 @login_required
@@ -57,9 +57,9 @@ def user_self_update():
     """
     form = ChangeAdminUserInforForm()
     if form.validate_on_submit():
-        current_user.name = form.name.data
-        current_user.phone_no = form.phone_no.data
-        current_user.email = form.email.data
+        current_user.name = strip(form.name.data)
+        current_user.phone_no = strip(form.phone_no.data)
+        current_user.email = strip(form.email.data)
         db.session.add(current_user)
         db.session.commit()
         flash('您的个人信息已经更新')
@@ -79,8 +79,8 @@ def user_self_passwd():
     """
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        if current_user.verify_password(form.old_password.data):
-            current_user.password = form.password.data
+        if current_user.verify_password(strip(form.old_password.data)):
+            current_user.password = strip(form.password.data)
             db.session.add(current_user)
             flash('您的密码已经更新')
             return redirect(url_for('admin.user'))
@@ -114,12 +114,12 @@ def add_user():
     form = AddAdminUserForm()
     if form.validate_on_submit():
         user = User()
-        user.login_name = form.login_name.data
-        user.name = form.name.data
-        user.password = str(form.password.data).strip()
-        user.phone_no = form.phone_no.data
-        user.email = form.email.data
-        user.remark = form.remark.data
+        user.login_name = strip(form.login_name.data)
+        user.name = strip(form.name.data)
+        user.password = strip(form.password.data)
+        user.phone_no = strip(form.phone_no.data)
+        user.email = strip(form.email.data)
+        user.remark = strip(form.remark.data)
         user.role_id = form.role.data
         user.is_active = form.status.data
         user.user_type = UserType.BACKEND_ADMIN
@@ -146,11 +146,11 @@ def mod_user(user_id):
     form = ModifyAdminUserForm()
     user = User.query.filter_by(user_id=user_id).one()
     if form.validate_on_submit():
-        user.login_name = form.login_name.data
-        user.name = form.name.data
-        user.phone_no = form.phone_no.data
-        user.email = form.email.data
-        user.remark = form.remark.data
+        user.login_name = strip(form.login_name.data)
+        user.name = strip(form.name.data)
+        user.phone_no = strip(form.phone_no.data)
+        user.email = strip(form.email.data)
+        user.remark = strip(form.remark.data)
         user.role_id = form.role.data
         user.is_active = form.status.data
         db.session.add(user)
@@ -195,8 +195,8 @@ def add_rolegroup():
     form = AddModRoleGroupForm()
     if form.validate_on_submit():
         rolegroup = RoleGroup()
-        rolegroup.name = form.name.data
-        rolegroup.remark = form.remark.data
+        rolegroup.name = strip(form.name.data)
+        rolegroup.remark = strip(form.remark.data)
         rolegroup.permissions = form.get_permissions()
         if rolegroup.permissions != 0:
             same_role_group_in_use = RoleGroup.query.filter_by(permissions=rolegroup.permissions).first()
@@ -213,7 +213,7 @@ def add_rolegroup():
                     flash('同名权限组已经存在，请另外取名', "error")
         else:
             flash('没有为权限组设置权限',"error")
-    return render_template("admin/common.html", form=form, title="添加权限组",
+    return render_template("admin/add_mod_rolegroups.html", form=form, title="添加权限组",
                            nav_menu=get_nav_menu(current_user),
                            tab_menu=get_tab_menu("users", current_user, "权限组"))
 
@@ -227,8 +227,8 @@ def mod_rolegroup(role_id):
     form = AddModRoleGroupForm()
     rolegroup = RoleGroup.query.filter_by(role_id=role_id).one()
     if form.validate_on_submit():
-        rolegroup.name = form.name.data
-        rolegroup.remark = form.remark.data
+        rolegroup.name = strip(form.name.data)
+        rolegroup.remark = strip(form.remark.data)
         if form.get_permissions() != 0:
             same_role_group_in_use = RoleGroup.query.filter_by(permissions=form.get_permissions()).first()
             if same_role_group_in_use:
@@ -246,6 +246,6 @@ def mod_rolegroup(role_id):
         form.name.data = rolegroup.name
         form.remark.data = rolegroup.remark
         form.set_permissions(rolegroup.permissions)
-    return render_template("admin/common.html", form=form, title="查看和修改权限组",
+    return render_template("admin/add_mod_rolegroups.html", form=form, title="查看和修改权限组",
                            nav_menu=get_nav_menu(current_user),
                            tab_menu=get_tab_menu("users", current_user, "权限组"))

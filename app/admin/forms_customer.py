@@ -48,8 +48,7 @@ class AddCorpCustomerForm(Form):
                                                   Regexp('[0-9]', 0, "手机号码格式不正确")])
     name = StringField('姓名（*）', validators=[ServerRequired('姓名不能为空'), Length(1, 32, "长度1-32字符")])
     password = PasswordField('密码（*）', validators=[ServerRequired('密码不能为空'), Length(8, 32, "长度8-32字符")])
-    # id_card_no = StringField('身份证号码', validators=[Optional(), Length(18, 18, "身份证号码必须18位"),
-    #                                               Regexp('[0-9A-Z]', 0, "身份证号码格式不正确")])
+    id_card_no = StringField('证件号码', validators=[Optional(), Length(1, 32, "长度1-32字符")])
     phone_no = StringField('电话（*）', validators=[ServerRequired('电话号码必填'), Length(1, 20, "长度最大20位"),
                                                 Regexp('[0-9-]', 0, "电话号码格式不正确")])
     email = StringField('邮箱', validators=[Optional(), Length(1, 64, "长度最大64"),

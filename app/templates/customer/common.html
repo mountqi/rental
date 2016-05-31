@@ -1,60 +1,346 @@
-{% extends "customer/customer_base.html" %}
+{% extends "bootstrap/base.html" %}
+{% import "customer/_macro_pop_menu.html" as macro_pop_menu %}
+{% import "customer/_macro_nav_menu.html" as macro_nav_menu %}
+{% import "_macro_page.html" as macro_page %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='house.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/c_styles.css') }}">
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<link href="{{ url_for('static', filename='css/iconfont.css') }}" rel="stylesheet" type="text/css">
+<meta charset="utf-8">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" id="container">
+    {% block page_content %}
+    <!-- header bar -->
+
+    <div id="header-bar">
+        {{ macro_pop_menu.render(g.pop_menu,id="customer-pop") }}
+        {{ macro_nav_menu.render(g.nav_menu,id="customer-nav") }}
+
+        <div class="input-group" id="bar-search">
+            <input type="text" class="form-control" id="search-input">
+            <span class="input-group-addon" id="search-btn"><i class="glyphicon glyphicon-search"></i></span>
+        </div>
+
+    </div>
 
 
-{% block page_content %}
+
+    <div class="filter-row" id="first-row">
+
+        <div class="filter-item">
+            {{ g.district_form.district.label(class="drop_label") }}
+            {{ g.district_form.district( class="drop_list") }}
+        </div>
+
+        <div class="filter-item">
+            {{ g.area_form.area.label(class="drop_label") }}
+            {{ g.area_form.area(class="drop_list") }}
+        </div>
+
+        <div class="filter-item">
+            {{ g.subway_form.subway.label(class="drop_label") }}
+            {{ g.subway_form.subway(class="drop_list") }}
+        </div>
+
+        <div class="filter-item">
+            {{ g.owner_type_form.owner_type.label(class="drop_label") }}
+            {{ g.owner_type_form.owner_type(class="drop_list") }}
+        </div>
+
+    </div> <!-- the filter-row -->
+
+    <div class="filter-row" id="second-row">
+        <div class="filter-item">
+            {{ g.estate_form.estate.label(class="drop_label") }}
+            {{ g.estate_form.estate(class="drop_list") }}
+        </div>
+
+        <div class="filter-item">
+            {{ g.layout_form.layout.label(class="drop_label") }}
+            {{ g.layout_form.layout(class="drop_list") }}
+        </div>
+
+        <div class="filter-item">
+            {{ g.square_form.square.label(class="drop_label") }}
+            {{ g.square_form.square(class="drop_list") }}
+        </div>
+
+        <div class="filter-item">
+            {{ g.price_form.price.label(class="drop_label") }}
+            {{ g.price_form.price(class="drop_list") }}
+        </div>
+
+    </div> <!-- the filter-row -->
+
+    <div class="property-table-div">
+        {%if g.all_properties and len(g.all_properties)>0 %}
+        <!-- 展示房源列表 users-->
+        <table id="property-table">
+            <thead>
+            <tr>
+                <th class="sort-title" id="status" {{g.get_sort_attr('status')|safe}}>状态 <i class="icon iconfont">{{g.get_sort_icon('status')|safe}}</i></th>
+                <th class="sort-title" id="freshment" {{g.get_sort_attr('freshment')|safe}}>新鲜度 <i class="icon iconfont">{{g.get_sort_icon('freshment')|safe}}</i></th>
+                <th class="sort-title" id="click-count" {{g.get_sort_attr('click-count')|safe}}>点击量 <i class="icon iconfont">{{g.get_sort_icon('click-count')|safe}}</i></th>
+                <th class="sort-title" id="estate" {{g.get_sort_attr('estate')|safe}}>物业名称 <i class="icon iconfont">{{g.get_sort_icon('estate')|safe}}</i></th>
+                <th class="sort-title" id="prop-layout" {{g.get_sort_attr('prop-layout')|safe}}>房型 <i class="icon iconfont">{{g.get_sort_icon('prop-layout')|safe}}</i></th>
+                <th class="sort-title" id="rent-price" {{g.get_sort_attr('rent-price')|safe}}>租金 <i class="icon iconfont">{{g.get_sort_icon('rent-price')|safe}}</i></th>
+                <th class="sort-title" id="prop-type" {{g.get_sort_attr('prop-type')|safe}}>类型 <i class="icon iconfont">{{g.get_sort_icon('prop-type')|safe}}</i></th>
+                <th class="sort-title" id="prop-update-date" {{g.get_sort_attr('prop-update-date')|safe}}>更新日期 <i class="icon iconfont">{{g.get_sort_icon('prop-update-date')|safe}}</i></th>
+                <th class="sort-title" id="prop-no" {{g.get_sort_attr('prop-no')|safe}}>房源编号 <i class="icon iconfont">{{g.get_sort_icon('prop-no')|safe}}</i></th>
+                <th class="sort-title" id="prop-source" {{g.get_sort_attr('prop-source')|safe}}>业主类型 <i class="icon iconfont">{{g.get_sort_icon('prop-source')|safe}}</i></th>
+                <th>详细资料</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% for p in g.all_properties %}
+            <tr class="parent" id="{{p.property_id}}">
+                <td class="bright-detail">
+                    {{p.get_status()}}
+                </td>
+                <td>
+                    100%
+                </td>
+                <td>
+                    0
+                </td>
+                <td class="bright-detail">
+                    {{p.estate.estate_name}}
+                </td>
+
+                <td>
+                    {{p.get_simple_layout()}}
+                </td>
+
+                <td class="bright-detail">
+                    {{p.get_rent_price_int()}}
+                </td>
+
+                <td>
+                    {{p.property_type}}
+                </td>
+
+                <td>
+                    {{date_format(p.valid_time)}}
+                </td>
+
+                <td>
+                    {{p.get_id_str()}}
+                </td>
+
+                <td>
+                    {{p.source.source_name}}
+                </td>
+
+                <td class="bright-detail check-detail">
+                    详细 <span class="glyphicon glyphicon-chevron-down"></span>
+                </td>
+
+            </tr>
+            <tr class="child child_{{p.property_id}}">
+                <td colspan="11">
+
+                </td>
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+        {%endif%}
+
+    </div> <!-- the property-table-div -->
+
+    <div class="row" id="page-row">
+        {% if g.pagination %}
+        <div class="pagination">
+            {{ macro_page.pagination_widget(g.pagination, 'customer.index', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
+        </div>
+        {% endif %}
+    </div> <!-- the row class div -->
+
+    {% endblock %}
+</div>
+
+<div class="modal fade" id="follow-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+
+         <div id="follow-user">
+            用户: {{current_user.login_name}}
+         </div>
+
+		<textarea id="follow-content" placeholder="请填写跟进内容"></textarea>
+
+		 <div id="btn-div">
+            <p class="dialog-btn" id="submit-follow">提交</p>
+            <p class="dialog-btn" id="close-follow"  data-dismiss="modal">关闭</p>
+         </div>
+
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+
+{% endblock %}
+
+
+
+{% block scripts %}
 {{ super() }}
 
-<div class="row ">
+<script>
 
-    <!--<div class="col-md-8">-->
-        <!--{{ g.district_form.district.label }} &nbsp; {{ g.district_form.district() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--{{ g.area_form.area.label }} &nbsp; {{ g.area_form.area() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--{{ g.subway_form.subway.label }} &nbsp; {{ g.subway_form.subway() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--{{ g.owner_type_form.owner_type.label }} &nbsp; {{ g.owner_type_form.owner_type() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-    <!--</div>-->
-    <!--<div class="col-md-8">-->
-        <!--{{ g.estate_form.estate.label }} &nbsp; {{ g.estate_form.estate() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--{{ g.layout_form.layout.label }} &nbsp; {{ g.layout_form.layout() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--{{ g.square_form.square.label }} &nbsp; {{ g.square_form.square() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--{{ g.price_form.price.label }} &nbsp; {{ g.price_form.price() }} &nbsp;&nbsp;&nbsp;&nbsp;-->
-    <!--</div>-->
+  $(function() {
+    $("#district_selection").change(ajax_update_property_list);
+    $("#estate_selection").change(ajax_update_property_list);
+    $("#area_selection").change(ajax_update_property_list);
+    $("#subway_selection").change(ajax_update_property_list);
+    $("#layout_selection").change(ajax_update_property_list);
+    $("#square_selection").change(ajax_update_property_list);
+    $("#owner_type_selection").change(ajax_update_property_list);
+    $("#price_selection").change(ajax_update_property_list);
 
-    <div class="col-md-2 drop-item">
-        {{ g.district_form.district.label }} &nbsp; {{ g.district_form.district( class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+    $('tr.child').hide();
+    $('td.check-detail').click(on_td_detail_click);
 
-    <div class="col-md-2 drop-item">
-        {{ g.area_form.area.label }} &nbsp; {{ g.area_form.area(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+    $("#submit-follow").click(on_submit_follow);
 
-    <div class="col-md-2 drop-item">
-        {{ g.subway_form.subway.label }} &nbsp; {{ g.subway_form.subway(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+    $("#status").click(on_header_sort);
+    $("#freshment").click(on_header_sort);
+    $("#click-count").click(on_header_sort);
+    $("#estate").click(on_header_sort);
+    $("#prop-layout").click(on_header_sort);
+    $("#rent-price").click(on_header_sort);
+    $("#prop-type").click(on_header_sort);
+    $("#prop-update-date").click(on_header_sort);
+    $("#prop-no").click(on_header_sort);
+    $("#prop-source").click(on_header_sort);
 
-    <div class="col-md-3 drop-item">
-         {{ g.owner_type_form.owner_type.label }} &nbsp; {{ g.owner_type_form.owner_type(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+  });
 
-</div> <!-- the row class div -->
+   var sort_by = 'no';
+   var order = true;  // ascend
 
-<div class="row ">
-    <div class="col-md-2 drop-item" >
-        {{ g.estate_form.estate.label }} &nbsp; {{ g.estate_form.estate(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+   function on_header_sort() {
 
-    <div class="col-md-2 drop-item">
-        {{ g.layout_form.layout.label }} &nbsp; {{ g.layout_form.layout(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+        $('th.sort-title i').html('&#xe637;')
 
-    <div class="col-md-2 drop-item">
-        {{ g.square_form.square.label }} &nbsp; {{ g.square_form.square(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+        id = $(this).attr('id');
+        sort_by = id;
 
-    <div class="col-md-3 drop-item">
-        {{ g.price_form.price.label }} &nbsp; {{ g.price_form.price(class="drop_list") }} &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
+        order = $(this).attr('order')
+        console.log(order)
 
-</div> <!-- the row class div -->
+        if (!order) {
+            order=true;
+        } else {
+            if (order=='true') {
+                order=false;
+            } else {
+                order=true;
+            }
+        }
+        console.log(order)
 
+        ajax_update_property_list()
+   }
+
+  function ajax_update_property_list() {
+        var params = {
+            district_id:$("#district_selection").val(),
+            estate_id:$("#estate_selection").val(),
+            area_id:$("#area_selection").val(),
+            subway:$("#subway_selection").val(),
+            layout:$("#layout_selection").val(),
+            square:$("#square_selection").val(),
+            owner_type:$("#owner_type_selection").val(),
+            price:$("#price_selection").val(),
+            sort_by:sort_by,
+            sort_order:order,
+        }
+
+       var str = jQuery.param( params );
+       window.location="{{url_for('customer.index')}}?"+str;
+  }
+
+   var detail_id = 0;
+
+   function on_td_detail_click() {
+        parent = $(this).parent()
+        $('span.glyphicon-chevron-up').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down')
+        if( parent.hasClass('expand') ) {
+            child = parent.siblings('.child_'+parent.attr('id'))
+            child.html('<td colspan="11"></td>')
+            child.hide();
+            parent.removeClass('expand');
+        } else {
+            $('tr.child').hide();
+            $('tr.expand').removeClass('expand');
+            $('tr.child-expand').removeClass('child-expand').html('<td colspan="11"></td>');
+            detail_id = parent.attr('id')
+            child = parent.siblings('.child_'+parent.attr('id'))
+            child.show();
+            child.html("<td colspan='0'><img class='loading-img' src='static/image/loading.gif'></td>");
+            parent.addClass('expand');
+            child.addClass('child-expand');
+            ajax_get_detail(parent.attr('id'))
+            $(this).children('span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up')
+        }
+   }
+
+
+  function ajax_get_detail(id) {
+        $.get( "{{ url_for('customer.property_detail') }}",
+            {
+                id:id
+            },
+            function(data){
+               child = $('tr.child-expand');
+               child.html(data);
+            }
+        );
+  }
+
+    if (!String.prototype.trim) {
+        (function() {
+            // Make sure we trim BOM and NBSP
+            var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+            String.prototype.trim = function() {
+                return this.replace(rtrim, '');
+            };
+        })();
+    }
+
+   function on_submit_follow() {
+        console.log('on_submit_follow')
+
+        follow_content = $('#follow-content').val().trim()
+        console.log(follow_content.length)
+        if (follow_content.length==0) {
+            return;
+        }
+
+        console.log('post')
+        $.post( "{{ url_for('customer.follow_property') }}",
+            {
+                id:detail_id,
+                content:follow_content
+            },
+            function(data){
+                $('#follow-content').val('')
+                $('#follow-table').html(data);
+                $('#follow-dialog').modal('hide');
+            }
+        );
+   }
+
+
+</script>
 
 {% endblock %}

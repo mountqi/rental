@@ -1,0 +1,27 @@
+<table class="follow">
+    <thead>
+    <tr>
+        <th>更新状态</th>
+        <th>更新时间</th>
+        <th>更新人员</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for follow in g.follows %}
+    <tr>
+        <td>
+            {{follow.follow_content}}
+        </td>
+        <td class="update-time">
+            {{datetime_format(follow.follow_time)}}
+        </td>
+        <td class="update-user">
+            {{follow.user.get_follow_name()}}
+        </td>
+    </tr>
+
+    {% endfor %}
+
+    </tbody>
+</table>

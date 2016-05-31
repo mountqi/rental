@@ -67,6 +67,8 @@ def two_col_form():
     form = AddEstateForm( city_id=1 )
 
     if form.validate_on_submit():
+
+
         flash('form are OK')
 
     return render_template('/experiment/two_col_form.html',form=form)
@@ -155,3 +157,11 @@ def send_mail1():
     send_email(to_addr, subject, template)
 
     return redirect(url_for('experiment.send_mail'))
+
+
+@experiment.route('/experiment/header-through', methods=['GET'])
+def header_through():
+    """
+    """
+    return render_template('/experiment/header_through.html')
+

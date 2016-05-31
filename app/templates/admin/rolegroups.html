@@ -7,7 +7,7 @@
 <div class="row ">
 
     <a href="{{ url_for('admin.add_rolegroup') }}">
-    <button type="button" class="btn btn-primary">添加权限组</button>
+    <button type="button" class="btn btn-primary page-btn">添加权限组</button>
     </a>
     <br/>
     <br/>
@@ -41,10 +41,14 @@
 
 </div> <!-- the row class div -->
 
-{% if pagination %}
-<div class="pagination">
-    {{ macro_page.pagination_widget(pagination, 'admin.rolegroups', fragment='#comments') }}
-</div>
-{% endif %}
+
+<div class="row ">
+    {% if pagination %}
+    <div class="pagination">
+        {{ macro_page.pagination_widget(pagination, 'admin.rolegroups', fragment='#comments') }}
+    </div>
+    {% endif %}
+</div> <!-- the row class div -->
+
 
 {% endblock %}

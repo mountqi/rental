@@ -1,16 +1,11 @@
 {% macro render(nav_menu,id="") %}
 {%if nav_menu%}
 
-<div>
-<ul id={{id}} class="nav navbar-nav">
+<ul id="{{id}}">
    {% for menu in nav_menu %}
-   <li {%if menu[2]%}class="active"{%endif%}  >
-      <a href="{{ url_for(menu[1]) }}">
-         {{menu[0]}}
-      </a>
-   </li>
+   <li {%if menu[2]%}class="active nav-item"{%else%}class="nav-item"{%endif%} ><a href="{{menu[1]}}">{{menu[0]}}</a></li>
    {% endfor %}
 </ul>
-</div>
+
 {%endif%}
 {% endmacro %}

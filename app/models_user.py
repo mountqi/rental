@@ -330,6 +330,9 @@ class User(UserMixin, db.Model):
         print("reset is done")
         return True
 
+    def get_follow_name(self):
+        return self.login_name
+
 
 class Agency(db.Model):
     __tablename__ = 'agencies'

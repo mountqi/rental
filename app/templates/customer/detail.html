@@ -1,0 +1,83 @@
+<td colspan='11'>
+
+    <img class="property-img" src='static/image/no-pic.jpg'>
+    <div class="property-detail" >
+
+        <p class="detail-header" id="price-detail"><i class="icon iconfont">&#xe664;</i>{{g.property.get_rent_price()}}</p>
+        <p class="detail-header" id="floor-detail">{{g.property.get_floor_type()}}</p>
+
+        <p class="detail-line detail-font">-房型：{{g.property.get_layout()}}</p>
+        <p class="detail-line detail-font">-面积：{{g.property.get_square()}}</p>
+        <p class="detail-line detail-font">-含&nbsp;&nbsp;&nbsp;&nbsp;：{{check_empty(g.property.inclusion)}}</p>
+        <p class="detail-line detail-font">-地址：{{g.property.get_address()}}</p>
+        <div>
+            <p class="detail-line detail-font" id="check-contact">付费会员查看房东及联系方式，请点击</p>
+        </div>
+
+        <script>
+            $("#check-contact").click(on_check_contact_click);
+
+            function on_check_contact_click() {
+                console.log('contact');
+                ajax_get_contact({{g.property.property_id}})
+            }
+
+            function ajax_get_contact(id) {
+                $.get( "{{ url_for('customer.property_contact') }}",
+                    {
+                        id:id
+                    },
+                    function(data){
+                       $('#check-contact').parent().html(data);;
+                    }
+                );
+            }
+
+        </script>
+    </div>
+
+    <div class="follow-detail" >
+
+        <div id="follow-header">
+            <p class="follow-btn" id="write-follow-btn" data-toggle="modal" data-target="#follow-dialog">写跟进</p>
+            <p class="follow-btn" id="mark-owner-btn">业主信誉度评价</p>
+            <p class="follow-btn" id="check-estate-btn">楼盘信息</p>
+        </div>
+
+
+        <div id="follow-table">
+            <table class="follow">
+                <thead>
+                <tr>
+                    <th>更新状态</th>
+                    <th>更新时间</th>
+                    <th>更新人员</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for follow in g.follows %}
+                <tr>
+                    <td>
+                        {{follow.follow_content}}
+                    </td>
+                    <td class="update-time">
+                        {{datetime_format(follow.follow_time)}}
+                    </td>
+                    <td class="update-user">
+                        {{follow.user.get_follow_name()}}
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <textarea id="detail-remark" disabled="disabled">--- 备注 ---
+{{check_empty(g.property.description)}}</textarea>
+
+    </div>
+
+</td>

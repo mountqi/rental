@@ -8,7 +8,7 @@
 <div class="row ">
 
     <a href="{{ url_for('admin.add_corp_customer') }}">
-    <button type="button" class="btn btn-primary">添加公司用户</button>
+    <button type="button" class="btn btn-primary page-btn">添加公司用户</button>
     </a>
     <br/>
     <br/>
@@ -53,11 +53,13 @@
 
 </div> <!-- the row class div -->
 
-{% if pagination %}
-<div class="pagination">
-    {{ macro_page.pagination_widget(pagination, 'admin.corp_customers', fragment='#comments') }}
-</div>
-{% endif %}
 
+<div class="row ">
+    {% if pagination %}
+    <div class="pagination">
+        {{ macro_page.pagination_widget(pagination, 'admin.corp_customers', fragment='#comments') }}
+    </div>
+    {% endif %}
+</div> <!-- the row class div -->
 
 {% endblock %}

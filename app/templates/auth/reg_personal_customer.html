@@ -1,31 +1,35 @@
 {% extends "auth/auth_base.html" %}
 {% import "auth/_macro_form_field.html" as macro_form_field %}
 
-{% block page_content %}
+{% block content %}
+
+<nav class="navbar navbar-default" role="navigation">
     <br/>
-    <br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1 col-md-offset-2 col-sm-2 col-sm-offset-1 col-xs-3" >
+               <img id="icon-img" src="{{url_for('static', filename='image/logo.png')}}">
+            </div>
+            <div class="col-md-1 col-sm-2 col-xs-3 reg-title-bar">
+                <a href="{{ url_for('auth.login') }}">
+                <p>登录</p>
+                <p class='lower-line'>Login</p>
+                </a>
+            </div>
+            <div class="col-md-1 col-sm-3 col-xs-4 reg-title-bar" >
+                <a href="{{ url_for('auth.contact_us') }}">
+                <p>联系我们</p>
+                <p class='lower-line'>Contact Us</p>
+                </a>
+            </div>
+        </div>
+    </div><!-- container -->
+</nav>
+
+<div class="container">
+
     <div class="row ">
-
-        <div class="col-md-1 col-md-offset-2" >
-           <img id="icon-img" src="{{url_for('static', filename='image/logo.png')}}">
-        </div>
-        <div class="col-md-1 reg-title-bar">
-            <a href="{{ url_for('auth.login') }}">
-            <p>登录</p>
-            <p class='lower-line'>Login</p>
-            </a>
-        </div>
-        <div class="col-md-1 reg-title-bar" >
-            <a href="{{ url_for('auth.contact_us') }}">
-            <p>联系我们</p>
-            <p class='lower-line'>Contact Us</p>
-            </a>
-        </div>
-
-    </div> <!-- the row class div -->
-
-    <div class="row ">
-        <div class="col-md-6 col-md-offset-2" >
+        <div class="col-md-8 col-md-offset-2" >
 
         {%if len(get_flashed_messages())>0 %}
             <br/>
@@ -44,7 +48,7 @@
 
     <br/>
 
-    <div class="row ">
+   <div class="row ">
 
          <div class="col-md-8 col-md-offset-2 jumbotron jumbotron-reg login-jb-bg" >
 
@@ -70,7 +74,6 @@
 
                 <form method="POST" class="form" role="form">
                     {{ g.form.csrf_token }}
-
                     {{ macro_form_field.render(g.form.login_name, placeholder="请填写手机号码") }}
                     {{ macro_form_field.render(g.form.password, placeholder="请设定密码") }}
                     {{ macro_form_field.render(g.form.password2, placeholder="请再次设定密码") }}
@@ -87,7 +90,8 @@
 
     </div> <!-- the row class div -->
 
+</div>
+
 
 
 {% endblock %}
-

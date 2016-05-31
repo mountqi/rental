@@ -1,4 +1,5 @@
 {% extends "auth/auth_base.html" %}
+{% import "auth/_macro_form_field.html" as macro_form_field %}
 
 {% block page_content %}
 
@@ -21,7 +22,7 @@
         </div>
     </div> <!-- the row class div -->
 
-    <div class="row ">
+    <div class="row" id="slogon-row">
 
         <div class="col-md-6 col-md-offset-3" >
             <div clas="logo_div"><img class="aligncenter" src="/static/image/logo.png"></div>
@@ -39,10 +40,8 @@
                 <p id="title">用户登录</p>
                 <form method="POST" class="form" role="form">
                     {{ g.form.csrf_token }}
-                    {{g.form.login_name(class='form-control', placeholder="请输入账户")}}
-                    <p>&nbsp;</p>
-                    {{g.form.password(class='form-control', placeholder="请输入密码")}}
-                    <p>&nbsp;</p>
+                    {{ macro_form_field.render(g.form.login_name, placeholder="请输入账户") }}
+                    {{ macro_form_field.render(g.form.password, placeholder="请输入密码") }}
                     {{g.form.submit(class='form-control', id='submit-btn')}}
                 </form>
             </div>
@@ -53,7 +52,7 @@
 
     <br/>
 
-    <div class="row">
+    <div class="row" id="sub-login-row">
 
         <div class="col-md-6 col-md-offset-3">
             <div class="sub-login" id="link-left">

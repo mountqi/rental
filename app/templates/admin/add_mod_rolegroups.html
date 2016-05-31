@@ -1,0 +1,40 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_content %}
+{{ super() }}
+
+<form method="POST"   class="form" role="form" >
+
+<div class="row ">
+    <div class="col-md-3">
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.name) }}
+        {{ wtf.form_field(form.remark) }}
+    </div>
+    <div class="col-md-4">
+        {{ wtf.form_field(form.add_mod_pmsn_grp) }}
+        {{ wtf.form_field(form.add_mod_admin_user) }}
+        {{ wtf.form_field(form.backup_restore_data) }}
+        {{ wtf.form_field(form.add_del_house) }}
+        {{ wtf.form_field(form.mod_house_status) }}
+        {{ wtf.form_field(form.add_mod_customer) }}
+        {{ wtf.form_field(form.visit_house_info) }}
+        {{ wtf.form_field(form.visit_house_contact) }}
+        {{ wtf.form_field(form.follow_house_status) }}
+        {{ wtf.form_field(form.pre_add_house) }}
+    </div>
+</div> <!-- the row class div -->
+
+<div class="row ">
+    <div class="col-md-3">
+        {{ wtf.form_field(form.submit) }}
+    </div>
+</div> <!-- the row class div -->
+
+</form>
+
+
+
+<br/>
+
+{% endblock %}

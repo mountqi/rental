@@ -21,7 +21,7 @@
     <div class="col-md-2">
         {%if g.city_id %}
         <a href="{{ url_for('admin.add_estate', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id) }}">
-        <button type="button" class="btn btn-primary">添加楼盘/小区</button>
+        <button type="button" class="btn btn-primary page-btn">添加楼盘/小区</button>
         </a>
         {%endif%}
     </div>
@@ -38,6 +38,8 @@
        <thead>
           <tr>
              <th>楼盘</th>
+             <th>区县</th>
+             <th>区域</th>
              <th></th>
           </tr>
        </thead>
@@ -49,6 +51,12 @@
                  <a href="{{ url_for('admin.mod_estate',city_id=g.city_id, estate_id=estate.estate_id) }}">
                  {{estate.estate_name}}
                  </a>
+             </td>
+             <td>
+                {{estate.district.district_name}}
+             </td>
+             <td>
+                {{estate.area.area_name}}
              </td>
              <td>
                 删除
@@ -65,11 +73,15 @@
 
 </div> <!-- the row class div -->
 
-{% if pagination %}
-<div class="pagination">
-    {{ macro_page.pagination_widget(pagination, 'admin.estates', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
-</div>
-{% endif %}
+
+<div class="row ">
+    {% if pagination %}
+    <div class="pagination">
+        {{ macro_page.pagination_widget(pagination, 'admin.estates', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
+    </div>
+    {% endif %}
+</div> <!-- the row class div -->
+
 
 {% endblock %}
 

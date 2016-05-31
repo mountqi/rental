@@ -37,12 +37,12 @@
     <div class="col-md-4">
         {%if g.city_id %}
         <a href="{{ url_for('admin.add_property', city_id=g.city_id, district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id) }}">
-        <button type="button" class="btn btn-primary">添加房源</button>
+        <button type="button" class="btn btn-primary page-btn">添加房源</button>
         </a>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <!--这里应该用选择好的distrit,area等！！在javascript里面做！！-->
         <a href="{{ url_for('admin.batch_mod_property', city_id=g.city_id, district_id=g.district_id, estate_id=g.estate_id, area_id=g.area_id) }}">
-        <button type="button" class="btn btn-primary">批量修改房源</button>
+        <button type="button" class="btn btn-primary page-btn">批量修改房源</button>
         </a>
 
         {%endif%}
@@ -125,11 +125,14 @@
 
 </div> <!-- the row class div -->
 
-{% if pagination %}
-<div class="pagination">
-    {{ macro_page.pagination_widget(pagination, 'admin.properties', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
-</div>
-{% endif %}
+
+<div class="row ">
+    {% if pagination %}
+    <div class="pagination">
+        {{ macro_page.pagination_widget(pagination, 'admin.properties', city_id=g.city_id, district_id=g.district_id, area_id=g.area_id ) }}
+    </div>
+    {% endif %}
+</div> <!-- the row class div -->
 
 {% endblock %}
 
@@ -146,8 +149,19 @@
     $("#source_selection").change(ajax_update_property_list)
   });
 
+
   function ajax_update_property_list() {
-        window.location = $(this).val()
+
+        var params = {
+            city_id:$("#city_selection").val(),
+            district_id:$("#district_selection").val(),
+            estate_id:$("#estate_selection").val(),
+            area_id:$("#area_selection").val(),
+            source:$("#source_selection").val()
+        }
+
+       var str = jQuery.param( params );
+       window.location="{{url_for('admin.properties')}}?"+str;
   }
 
 </script>

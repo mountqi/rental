@@ -1,12 +1,30 @@
 {% extends "auth/auth_base.html" %}
 
-{% block page_content %}
-    <br/>
-    <br/>
-    <div class="row ">
+{% block content %}
 
-        <div class="col-md-6 col-md-offset-3" >
-           <div class="jumbotron login-jb-bg">
+<nav class="navbar navbar-default" role="navigation">
+    <br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1 col-md-offset-3 col-sm-2 col-xs-3" >
+               <img id="icon-img" src="{{url_for('static', filename='image/logo.png')}}">
+            </div>
+            <div class="col-md-1 col-sm-2 col-xs-6 reg-title-bar">
+                <a href="{{ url_for('auth.login') }}">
+                <p>登录</p>
+                <p class='lower-line'>Login</p>
+                </a>
+            </div>
+        </div>
+    </div><!-- container -->
+</nav>
+
+<div class="container">
+
+    <div class="row" id="contact-row">
+
+        <div class="col-md-6 col-md-offset-3" id="contact-div">
+           <div class="jumbotron login-jb-bg" id="contact-jb">
               <img id="contact-img" src="{{url_for('static', filename='image/wx_contact.jpg')}}">
               <p id="contact-note">{{g.note}}</p>
            </div>
@@ -14,6 +32,6 @@
 
     </div> <!-- the row class div -->
 
+</div>
 
 {% endblock %}
-

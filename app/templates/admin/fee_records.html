@@ -35,11 +35,15 @@
 
 </div> <!-- the row class div -->
 
-{% if pagination %}
-<div class="pagination">
-    {{ macro_page.pagination_widget(pagination, 'admin.fee_records', fragment='#comments') }}
-</div>
-{% endif %}
+
+
+<div class="row ">
+    {% if pagination %}
+    <div class="pagination">
+        {{ macro_page.pagination_widget(pagination, 'admin.fee_records', fragment='#comments') }}
+    </div>
+    {% endif %}
+</div> <!-- the row class div -->
 
 
 {% endblock %}

@@ -18,10 +18,12 @@ from .forms_property import AddCityForm, AddDistrictForm, ShowCityListForDistric
     ShowAreaListForAdminPropertyForm, ShowSourceListForAdminPropertyForm,\
     ShowEstateListForAdminPropertyForm, AddPropertyForm, AddFollowForm
 
+
 from .. import db, check_empty
 from ..models_property import City, District, Area, Estate, Property, Follow
 from .menu_factory import get_nav_menu, get_tab_menu
 from ..decorators import permission_required
+from ..utils import strip
 
 
 @admin.route('/admin/cities',methods=['GET'])
@@ -91,7 +93,7 @@ def add_district(city_id):
     form = AddDistrictForm()
     if form.validate_on_submit():
         district = District()
-        district.district_name = form.district_name.data
+        district.district_name = strip(form.district_name.data)
         district.city_id = city_id
         db.session.add(district)
         try:
@@ -136,7 +138,7 @@ def add_area(city_id):
     form = AddAreaForm()
     if form.validate_on_submit():
         area = Area()
-        area.area_name = form.area_name.data
+        area.area_name = strip(form.area_name.data)
         area.city_id = city_id
         db.session.add(area)
         try:
@@ -206,23 +208,23 @@ def add_estate(city_id,district_id,area_id):
 
     if form.validate_on_submit():
         estate = Estate()
-        estate.estate_name = form.estate_name.data
+        estate.estate_name = strip(form.estate_name.data)
         estate.city_id = city_id
         estate.district_id = form.district.data
         estate.area_id = form.area.data
-        estate.english_name = form.english_name.data
-        estate.zhpy = form.zhpy.data
-        estate.complete_year = form.complete_year.data
-        estate.address = form.address.data
-        estate.developer = form.developer.data
-        estate.mgt_company = form.mgt_company.data
+        estate.english_name = strip(form.english_name.data)
+        estate.zhpy = strip(form.zhpy.data)
+        estate.complete_year = strip(form.complete_year.data)
+        estate.address = strip(form.address.data)
+        estate.developer = strip(form.developer.data)
+        estate.mgt_company = strip(form.mgt_company.data)
         estate.mgt_fee = form.mgt_fee.data
         estate.total_sqare = form.total_sqare.data
         estate.total_houses = form.total_houses.data
         estate.floor_area_ratio = form.floor_area_ratio.data
         estate.parking_no = form.parking_no.data
         estate.green_rate = form.green_rate.data
-        estate.introduction = form.introduction.data
+        estate.introduction = strip(form.introduction.data)
         db.session.add(estate)
         try:
             db.session.commit()
@@ -250,24 +252,23 @@ def mod_estate(city_id,estate_id):
     estate = Estate.query.filter_by(estate_id=estate_id).one()
 
     if form.validate_on_submit():
-        estate = Estate()
-        estate.estate_name = form.estate_name.data
+        estate.estate_name = strip(form.estate_name.data)
         estate.city_id = city_id
         estate.district_id = form.district.data
         estate.area_id = form.area.data
-        estate.english_name = form.english_name.data
-        estate.zhpy = form.zhpy.data
-        estate.complete_year = form.complete_year.data
-        estate.address = form.address.data
-        estate.developer = form.developer.data
-        estate.mgt_company = form.mgt_company.data
+        estate.english_name = strip(form.english_name.data)
+        estate.zhpy = strip(form.zhpy.data)
+        estate.complete_year = strip(form.complete_year.data)
+        estate.address = strip(form.address.data)
+        estate.developer = strip(form.developer.data)
+        estate.mgt_company = strip(form.mgt_company.data)
         estate.mgt_fee = form.mgt_fee.data
         estate.total_sqare = form.total_sqare.data
         estate.total_houses = form.total_houses.data
         estate.floor_area_ratio = form.floor_area_ratio.data
         estate.parking_no = form.parking_no.data
         estate.green_rate = form.green_rate.data
-        estate.introduction = form.introduction.data
+        estate.introduction = strip(form.introduction.data)
         db.session.add(estate)
         try:
             db.session.commit()
@@ -448,19 +449,19 @@ def add_property():
         property.property_type = form.property_type.data
         property.property_direction = form.property_direction.data
         property.square = form.square.data
-        property.owner_name = form.owner_name.data
-        property.contact_name = form.contact_name.data
-        property.contact_tel = form.contact_tel.data
+        property.owner_name = strip(form.owner_name.data)
+        property.contact_name = strip(form.contact_name.data)
+        property.contact_tel = strip(form.contact_tel.data)
         property.status = form.status.data
-        property.furniture = form.furniture.data
-        property.description = form.description.data
+        property.inclusion = strip(form.inclusion.data)
+        property.description = strip(form.description.data)
         property.valid_time = form.valid_time.data
         property.trust_grade = form.trust_grade.data
         property.rent_price = form.rent_price.data
         property.mgt_price = form.mgt_price.data
         property.reg_user_id = current_user.user_id
-        property.longitude = form.longitude.data
-        property.latitude = form.latitude.data
+        property.longitude = strip(form.longitude.data)
+        property.latitude = strip(form.latitude.data)
         property.source = form.source.data
 
         db.session.add(property)
@@ -529,21 +530,21 @@ def mod_property(property_id):
         property.count_w = form.count_w.data
         property.count_y = form.count_y.data
         property.property_type = form.property_type.data
-        property.property_direction = form.property_direction.data
+        property.property_direction = strip(form.property_direction.data)
         property.square = form.square.data
-        property.owner_name = form.owner_name.data
-        property.contact_name = form.contact_name.data
-        property.contact_tel = form.contact_tel.data
+        property.owner_name = strip(form.owner_name.data)
+        property.contact_name = strip(form.contact_name.data)
+        property.contact_tel = strip(form.contact_tel.data)
         property.status = form.status.data
-        property.furniture = form.furniture.data
-        property.description = form.description.data
+        property.inclusion = strip(form.inclusion.data)
+        property.description = strip(form.description.data)
         property.valid_time = form.valid_time.data
         property.trust_grade = form.trust_grade.data
         property.rent_price = form.rent_price.data
         property.mgt_price = form.mgt_price.data
-        property.reg_user_id = current_user.user_id
-        property.longitude = form.longitude.data
-        property.latitude = form.latitude.data
+        # property.reg_user_id = current_user.user_id
+        property.longitude = strip(form.longitude.data)
+        property.latitude = strip(form.latitude.data)
         property.source = form.source.data
 
         db.session.add(property)
@@ -572,11 +573,11 @@ def mod_property(property_id):
         form.property_type.data = property.property_type
         form.property_direction.data = property.property_direction
         form.square.data = property.square
-        form.owner_name.data = property.square
+        form.owner_name.data = property.owner_name
         form.contact_name.data = property.contact_name
         form.contact_tel.data = property.contact_tel
         form.status.data = property.status
-        form.furniture.data = property.furniture
+        form.inclusion.data = property.inclusion
         form.description.data = property.description
         form.valid_time.data = property.valid_time
         form.trust_grade.data = property.trust_grade
@@ -612,7 +613,7 @@ def follow_property(property_id):
     form = AddFollowForm()
     if form.validate_on_submit():
         follow = Follow()
-        follow.follow_content = form.follow_content.data
+        follow.follow_content = strip(form.follow_content.data)
         follow.property_id = property_id
         follow.follow_user_id = current_user.user_id
         db.session.add(follow)

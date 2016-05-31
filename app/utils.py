@@ -13,6 +13,10 @@ class ServerRequired(object):
             raise ValidationError(self.message)
 
 
+def strip(data):
+    return str(data).strip()
+
+
 def set_session(key,value):
     session.permanent = True
     session[key] = value
